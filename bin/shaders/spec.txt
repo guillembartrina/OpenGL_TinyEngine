@@ -1,0 +1,8 @@
+Shaders spec:
+
+IN Attributes:
+
+- Location:
+
+0 - vertex, 1 - normal, 2 - texCoord, 3-9 (free)
+10 - ka, 11 - kd, 12 - ks, 13 - ns, 14-... (free)
