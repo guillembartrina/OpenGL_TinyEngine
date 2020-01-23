@@ -10,7 +10,6 @@ class Transformable3D : public Transformable
 {
 public:
 
-    Transformable3D();
     ~Transformable3D();
 
     glm::vec3 getCenter() const;
@@ -26,10 +25,13 @@ public:
     
     void applyTransform(const glm::mat4& transform);
 
+protected:
+
+    Transformable3D();
+
 private:
 
     glm::vec3 origin;
-
 };
 
 #endif

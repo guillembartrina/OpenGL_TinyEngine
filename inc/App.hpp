@@ -11,6 +11,7 @@
 #include "Program.hpp"
 #include "Camera.hpp"
 #include "Model3D.hpp"
+#include "Rectangle.hpp"
 #include "RenderFrame.hpp"
 #include "TestRP.hpp"
 
@@ -38,7 +39,10 @@ private:
 
     TestRP* trp;
 
+    GLuint testRect;
+
     std::vector<Model3D*> drawables;
+    Rectangle* rect;
 
     RenderFrame* rf;
 

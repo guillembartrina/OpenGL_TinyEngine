@@ -3,6 +3,8 @@
 
 #include "GL/glew.h"
 
+const glm::mat4 Transformable::identity = glm::mat4(1.0);
+
 Transformable::Transformable()
 {
     MMlocation = SUL::MM;

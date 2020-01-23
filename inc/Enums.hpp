@@ -19,7 +19,8 @@ enum SUL
     MM = 0,
     VM = 1,
     PM = 2,
-    SUL_NUM = 3
+    color = 10,
+    SUL_NUM = 4
 };
 
 

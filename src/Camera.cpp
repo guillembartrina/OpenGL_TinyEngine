@@ -8,8 +8,8 @@ Camera::Camera()
 {
 	optic = OpticType::ORTHOGONAL;
 
-	//setdefaultFocus() VM = glm::mat4(1.f);
-	//setdefaultOptic() PM = glm::mat4(1.f);
+	VM = glm::mat4(1.0);
+	PM = glm::mat4(1.0);
 }
 
 Camera::~Camera() {}

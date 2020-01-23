@@ -97,11 +97,13 @@ Model3D::Model3D(const DrawableDefinition& dd)
 
 	bb = computeBB(dd);
 	center = (bb.first + bb.second) / 2.f;
-
-	MM = glm::mat4(1.0);
 }
 
-Model3D::~Model3D() {}
+Model3D::~Model3D()
+{
+	glDeleteBuffers(VBOs.size(), &VBOs[0]);
+	glDeleteVertexArrays(1, &VAO);
+}
 
 void Model3D::draw() const
 {
@@ -116,6 +118,53 @@ void Model3D::draw() const
 		glDrawArrays(GL_TRIANGLES, 0, elements);
 	}
 	glBindVertexArray(0);
+}
+
+Model3D* Model3D::plane()
+{
+	DrawableDefinition dd;
+    dd.vertices = { 0.0,    0.0,    0.0,
+                    1.0,    0.0,	0.0,
+                    0.0,   	1.0,    0.0,
+                    1.0,    1.0,    0.0 };
+
+    dd.indices = {  1,  2,  0,
+                    1,  3,  2 };
+
+	return new Model3D(dd);
+}
+
+Model3D* Model3D::cube()
+{
+	DrawableDefinition dd;
+    dd.vertices = { 0.0, 0.0, 0.0, //0
+                    0.0, 0.0, 1.0, //1
+                    0.0, 1.0, 0.0, //2
+                    0.0, 1.0, 1.0, //3
+                    1.0, 0.0, 0.0, //4
+                    1.0, 0.0, 1.0, //5
+                    1.0, 1.0, 0.0, //6
+                    1.0, 1.0, 1.0 };
+
+    dd.indices = {  0,  6,  4,
+                    0,  2,  6,
+
+                    1,  2,  0,
+                    1,  3,  2,
+
+                    5,  3,  1,
+                    5,  7,  3,
+
+                    4,  7,  5,
+                    4,  6,  7,
+                    
+                    4,  1,  0,
+                    4,  6,  1,
+                    
+                    7,  2,  3,
+                    7,  6,  2 };
+
+	return new Model3D(dd);
 }
 
 BB Model3D::computeBB(const DrawableDefinition& dd)

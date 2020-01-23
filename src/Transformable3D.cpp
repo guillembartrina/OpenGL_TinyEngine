@@ -32,24 +32,27 @@ void Transformable3D::setOrigin(const glm::vec3& origin)
 void Transformable3D::setPosition(const glm::vec3& position)
 {
     glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(MM, position);
-    MM = glm::translate(MM, -pos);
+    MM = glm::translate(identity, -pos) * MM;
+    MM = glm::translate(identity, position) * MM;
 }
 
 void Transformable3D::applyTranslate(const glm::vec3& translate)
 {
-    MM = glm::translate(MM, translate);
+    MM = glm::translate(identity, translate) * MM;
 }
 
 void Transformable3D::setScale(const glm::vec3& scale)
 {
     glm::vec3 size = getSize();
-    MM = glm::scale(MM, glm::vec3(scale.x / size.x, scale.y / size.y, scale.z / size.z));
+    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
+    MM = glm::translate(identity, -pos) * MM;
+    MM = glm::scale(identity, glm::vec3(scale.x / size.x, scale.y / size.y, scale.z / size.z)) * MM;
+    MM = glm::translate(identity, pos) * MM;
 }
 
 void Transformable3D::applyScale(const glm::vec3& scale)
 {
-    MM = glm::scale(MM, scale);
+    MM = glm::scale(identity, scale) * MM;
 }
 
 void Transformable3D::applyTransform(const glm::mat4& transform)

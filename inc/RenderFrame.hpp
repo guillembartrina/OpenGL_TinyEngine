@@ -12,7 +12,7 @@ class RenderFrame
 {
 public:
 
-    RenderFrame(glm::uvec2 position, glm::uvec2 size, glm::vec4 clearColor = glm::vec4(0.0, 0.0, 0.0, 1.0));
+    RenderFrame(const glm::ivec2& position, const glm::uvec2& size, const glm::vec4& clearColor = glm::vec4(0.0, 0.0, 0.0, 1.0));
     ~RenderFrame();
 
     void startDrawing() const;
@@ -25,7 +25,7 @@ public:
 
 private:
 
-    glm::uvec2 position;
+    glm::ivec2 position;
     glm::uvec2 size;
 
     glm::vec4 clearColor;

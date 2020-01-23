@@ -1,16 +1,19 @@
 
 #include "RenderFrame.hpp"
 
-RenderFrame::RenderFrame(glm::uvec2 position, glm::uvec2 size, glm::vec4 clearColor)
+RenderFrame::RenderFrame(const glm::ivec2& position, const glm::uvec2& size, const glm::vec4& clearColor)
 {
     this->position = position;
     this->size = size;
     this->clearColor = clearColor;
 
-    camera = Camera::getDefaultCamera();
+    camera = new Camera();
 }
 
-RenderFrame::~RenderFrame() {}
+RenderFrame::~RenderFrame()
+{
+    delete camera;
+}
 
 void RenderFrame::startDrawing() const
 {
@@ -35,7 +38,7 @@ void RenderFrame::draw(const Drawable& d) const
 void RenderFrame::drawOnSurface(const Drawable& d) const //Change?
 {
     glm::mat4 ident(1.0);
-    glm::mat4 ortho = glm::ortho(position.x, position.x+size.x, position.y+size.y, position.y);
+    glm::mat4 ortho = glm::ortho(float(position.x), float(position.x+size.x), float(position.y+size.y), float(position.y));
 
     glUniformMatrix4fv(SUL::VM, 1, GL_FALSE, &ident[0][0]);
     glUniformMatrix4fv(SUL::PM, 1, GL_FALSE, &ortho[0][0]);

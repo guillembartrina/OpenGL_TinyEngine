@@ -15,7 +15,6 @@ class Transformable
 {
 public:
 
-    Transformable();
     ~Transformable();
 
     void setMMLocation(GLuint MMlocation);
@@ -25,10 +24,14 @@ public:
 
 protected:
 
+    Transformable();
+    
     glm::vec3 center;
     BB bb;
 
     glm::mat4 MM;
+
+    static const glm::mat4 identity;
 
 private:
     

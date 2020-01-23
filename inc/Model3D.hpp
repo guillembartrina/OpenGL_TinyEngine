@@ -20,6 +20,9 @@ public:
 
     void draw() const;
 
+    static Model3D* plane();
+    static Model3D* cube();
+
 private:
 
     GLuint VAO;
@@ -29,7 +32,6 @@ private:
     unsigned int elements;
 
     static BB computeBB(const DrawableDefinition& dd);
-
 };
 
 #endif

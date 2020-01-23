@@ -22,8 +22,8 @@ App::App(const char* name, unsigned int W, unsigned int H)
 		throw std::runtime_error("Failed to create window");
 	}
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    glfwSetCursorPos(window, W/2, H/2);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    //glfwSetCursorPos(window, W/2, H/2);
 
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, callback_key);
@@ -60,26 +60,29 @@ App::App(const char* name, unsigned int W, unsigned int H)
     //---
 
     rf->getCamera()->setFocus(glm::vec3(0.0, 0.0, 4.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-    rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
+    rf->getCamera()->setOptic_Orthogonal(-5, 5, -5, 5, 0.1, 40.0);
+    //rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
 
     //rf->camera.applyResize(W, H);
 
     //---
 
-    DrawableDefinition dd;
-    dd.vertices = { 0.5,    0.5,    0.0,
-                    0.5,    -0.5,   0.0,
-                    -0.5,   0.5,    0.0,
-                    -0.5,   -0.5,   0.0 };
+    rect = new Rectangle(glm::vec2(250, 250), glm::vec2(500, 500));
+    rect->setPosition(glm::vec2(750, 750));
 
-    dd.indices = {  3,  1,  0,
-                    3,  0,  2 };
+    drawables.push_back(Model3D::plane());
+    //drawables.back()->setOrigin(glm::vec3(0.0, -0.5, 0.0));
+    //drawables.back()->setPosition(glm::vec3(0, 4, 0));
+    //drawables.back()->applyTranslate(glm::vec3(0, -2, 0));
+    //drawables.back()->setPosition(glm::vec3(0, -4, 0));
+    //drawables.back()->setScale(glm::vec3(3, 3, 3));
+    //drawables.back()->applyTranslate(glm::vec3(-0.5, -0.5, -0.5));
+    //drawables.back()->applyScale(glm::vec3(9, 9, 9));
 
-    drawables.push_back(new Model3D(dd));
+    //drawables.back()->applyTranslate(glm::vec3(0, 2.0, 0));
 
-    drawables.back()->applyTranslate(glm::vec3(0, 2.0, 0));
-
-    trp = new TestRP();
+    //trp = new TestRP();
+    
 }
 
 App::~App()
@@ -91,7 +94,8 @@ App::~App()
 
     delete program;
     delete rf;
-    delete trp;
+    //delete trp;
+    delete rect;
 
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -141,8 +145,8 @@ void App::draw() const
     program->use();
     rf->startDrawing();
     //rf->draw(*drawables.back());
-    rf->render(*trp);
-    //rf->drawOnSurface(*drawables.back());
+    //rf->render(*trp);
+    rf->drawOnSurface(*rect);
     rf->endDrawing();
 
     glfwSwapBuffers(window);
@@ -168,7 +172,7 @@ void App::callback_cursor(GLFWwindow *window, double xpos, double ypos)
     double diffY = ypos - app->H/2;
     app->rf->getCamera()->rotateY_VRP(-diffY / 360.f);
 
-    glfwSetCursorPos(window, app->W/2, app->H/2);
+    //glfwSetCursorPos(window, app->W/2, app->H/2);
 }
 
 void App::callback_resize(GLFWwindow *window, int width, int height)
