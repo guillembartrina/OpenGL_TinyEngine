@@ -37,12 +37,11 @@ private:
     Shader* fs;
     Program* program;
 
-    TestRP* trp;
+    //TestRP* trp;
 
-    GLuint testRect;
-
-    std::vector<Model3D*> drawables;
-    Rectangle* rect;
+    //std::vector<Model3D*> drawables;
+    Texture* txt;
+    Drawable* rect;
 
     RenderFrame* rf;
 

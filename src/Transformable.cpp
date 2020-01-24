@@ -7,7 +7,8 @@ const glm::mat4 Transformable::identity = glm::mat4(1.0);
 
 Transformable::Transformable()
 {
-    MMlocation = SUL::MM;
+    static_assert(SUL2D_MM == SUL3D_MM);
+    MMlocation = SUL3D_MM;
 }
 
 Transformable::~Transformable() {}

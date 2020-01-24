@@ -67,10 +67,10 @@ App::App(const char* name, unsigned int W, unsigned int H)
 
     //---
 
-    rect = new Rectangle(glm::vec2(250, 250), glm::vec2(500, 500));
-    rect->setPosition(glm::vec2(750, 750));
+    txt = new Texture("cat.jpg");
+    rect = new Rectangle(glm::vec2(500, 500), glm::vec2(1000, 1000), txt);
 
-    drawables.push_back(Model3D::plane());
+    //drawables.push_back(Model3D::plane());
     //drawables.back()->setOrigin(glm::vec3(0.0, -0.5, 0.0));
     //drawables.back()->setPosition(glm::vec3(0, 4, 0));
     //drawables.back()->applyTranslate(glm::vec3(0, -2, 0));
@@ -81,16 +81,15 @@ App::App(const char* name, unsigned int W, unsigned int H)
 
     //drawables.back()->applyTranslate(glm::vec3(0, 2.0, 0));
 
-    //trp = new TestRP();
-    
+    //trp = new TestRP();    
 }
 
 App::~App()
 {
-    for(unsigned int i = 0; i < drawables.size(); i++)
-    {
-        delete drawables[i];
-    }
+    //for(unsigned int i = 0; i < drawables.size(); i++)
+    //{
+    //    delete drawables[i];
+    //}
 
     delete program;
     delete rf;

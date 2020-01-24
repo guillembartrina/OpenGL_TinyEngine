@@ -27,8 +27,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.vertices.size(), &dd.vertices[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::vertex);
+		glVertexAttribPointer(SAL3D_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_vertex);
 	}
 
 	if(not dd.normals.empty())
@@ -37,8 +37,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.normals.size(), &dd.normals[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::normal);
+		glVertexAttribPointer(SAL3D_normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_normal);
 	}
 
 	if(not dd.texCoords.empty())
@@ -47,8 +47,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.texCoords.size(), &dd.texCoords[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::texCoord);
+		glVertexAttribPointer(SAL3D_texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_texCoord);
 	}
 
 	if(not dd.kas.empty())
@@ -57,8 +57,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kas.size(), &dd.kas[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::ka, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::ka);
+		glVertexAttribPointer(SAL3D_ka, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_ka);
 	}
 
 	if(not dd.kds.empty())
@@ -67,8 +67,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kds.size(), &dd.kds[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::kd, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::kd);
+		glVertexAttribPointer(SAL3D_kd, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_kd);
 	}
 
 	if(not dd.kss.empty())
@@ -77,8 +77,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kss.size(), &dd.kss[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::ks, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::ks);
+		glVertexAttribPointer(SAL3D_ks, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_ks);
 	}
 
 	if(not dd.nss.empty())
@@ -87,8 +87,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.nss.size(), &dd.nss[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(SAL::ns, 1, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(SAL::ns);
+		glVertexAttribPointer(SAL3D_ns, 1, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(SAL3D_ns);
 	}
 
 	glBindVertexArray(0);

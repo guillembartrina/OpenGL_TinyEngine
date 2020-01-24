@@ -2,26 +2,42 @@
 #ifndef ENUMS_HPP
 #define ENUMS_HPP
 
-enum SAL
+enum SAL3D
 {
-    vertex = 0,
-    normal = 1,
-    texCoord = 2,
-    ka = 10,
-    kd = 11,
-    ks = 12,
-    ns = 13,
-    SAL_NUM = 7
+    SAL3D_vertex = 0,
+    SAL3D_normal = 1,
+    SAL3D_texCoord = 2,
+    SAL3D_ka = 10,
+    SAL3D_kd = 11,
+    SAL3D_ks = 12,
+    SAL3D_ns = 13,
+    SAL3D_NUM = 7
 };
 
-enum SUL
+enum SUL3D
 {
-    MM = 0,
-    VM = 1,
-    PM = 2,
-    color = 10,
-    SUL_NUM = 4
+    SUL3D_MM = 0,
+    SUL3D_VM = 1,
+    SUL3D_PM = 2,
+    SUL3D_color = 10,
+    SUL3D_NUM = 4
 };
 
+
+enum SAL2D
+{
+    SAL2D_vertex = 0,
+    SAL2D_texCoord = 1,
+    SAL2D_NUM = 2
+};
+
+enum SUL2D
+{
+    SUL2D_MM = 0,
+    SUL2D_WM = 1,
+    SUL2D_color = 10,
+    SUL2D_textured = 20,
+    SUL2D_NUM = 4
+};
 
 #endif
