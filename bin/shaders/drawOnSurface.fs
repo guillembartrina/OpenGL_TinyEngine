@@ -1,6 +1,7 @@
 #version 450
 
 //uniform sampler2D texture;
+//FINISHED ON renderframe.hpp
 
 in vec2 vTexCoord;
 

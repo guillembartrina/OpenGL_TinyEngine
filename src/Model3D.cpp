@@ -6,6 +6,7 @@
 Model3D::Model3D(const DrawableDefinition& dd)
 {
 	indexed = false;
+	texture = nullptr;
 
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -49,6 +50,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.texCoords.size(), &dd.texCoords[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_texCoord);
+
+		texture = new Texture(dd.texName);
 	}
 
 	if(not dd.kas.empty())
@@ -101,6 +104,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 
 Model3D::~Model3D()
 {
+	if(texture) delete texture;
+
 	glDeleteBuffers(VBOs.size(), &VBOs[0]);
 	glDeleteVertexArrays(1, &VAO);
 }
@@ -109,6 +114,7 @@ void Model3D::draw() const
 {
 	glBindVertexArray(VAO);
 	Transformable3D::bind();
+	//if(texture) texture->bind();
 	if(indexed)
 	{
 		glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, 0);

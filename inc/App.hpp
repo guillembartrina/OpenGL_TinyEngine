@@ -39,7 +39,7 @@ private:
 
     //TestRP* trp;
 
-    //std::vector<Model3D*> drawables;
+    std::vector<Model3D*> drawables;
     Texture* txt;
     Drawable* rect;
 

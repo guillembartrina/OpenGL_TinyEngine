@@ -19,8 +19,11 @@ enum SUL3D
     SUL3D_MM = 0,
     SUL3D_VM = 1,
     SUL3D_PM = 2,
-    SUL3D_color = 10,
-    SUL3D_NUM = 4
+    SUL3D_textured = 10,
+    SUL3D_illumination = 11,
+    SUL3D_numLights = 20,
+    SUL3D_lights = 21,
+    SUL3D_NUM = 5
 };
 
 
@@ -35,8 +38,8 @@ enum SUL2D
 {
     SUL2D_MM = 0,
     SUL2D_WM = 1,
-    SUL2D_color = 10,
-    SUL2D_textured = 20,
+    SUL2D_textured = 10,
+    SUL2D_color = 20,
     SUL2D_NUM = 4
 };
 

@@ -28,6 +28,7 @@ public:
     void endDrawing() const;
 
     Camera* getCamera();
+    std::vector<glm::vec3>& getLights();
 
 private:
 
@@ -37,6 +38,8 @@ private:
     glm::vec4 clearColor;
 
     Camera* camera;
+
+    std::vector<glm::vec3> lights;
 
     glm::mat4 surfaceOrtho;
 

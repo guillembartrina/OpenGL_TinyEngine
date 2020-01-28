@@ -17,10 +17,8 @@ Texture::Texture(const std::string& filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     int nrc;
-
-    std::string path = "textures/" + filename;
     
-    unsigned char* data = stbi_load(path.c_str(), &W, &H, &nrc, 0);
+    unsigned char* data = stbi_load(filename.c_str(), &W, &H, &nrc, 0);
 
     if(data)
     {

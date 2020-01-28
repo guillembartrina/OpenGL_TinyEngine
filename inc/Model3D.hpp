@@ -9,6 +9,7 @@
 #include "Transformable3D.hpp"
 #include "IO.hpp"
 #include "Enums.hpp"
+#include "Texture.hpp"
 
 
 class Model3D : public Drawable, public Transformable3D
@@ -30,6 +31,8 @@ private:
 
     bool indexed;
     unsigned int elements;
+
+    Texture* texture;
 
     static BB computeBB(const DrawableDefinition& dd);
 };

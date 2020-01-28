@@ -22,8 +22,8 @@ App::App(const char* name, unsigned int W, unsigned int H)
 		throw std::runtime_error("Failed to create window");
 	}
 
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    //glfwSetCursorPos(window, W/2, H/2);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetCursorPos(window, W/2, H/2);
 
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, callback_key);
@@ -43,13 +43,13 @@ App::App(const char* name, unsigned int W, unsigned int H)
     //---
 
     vs = new Shader(ShaderType::Vertex);
-    //vs->load_fromFile("shaders/vs.vert");
-    vs->load_default();
+    vs->load_fromFile("shaders/draw.vs");
+    //vs->load_default();
     if(!vs->compile()) std::cout << "ERROR1!" << std::endl;
 
     fs = new Shader(ShaderType::Fragment);
-    //fs->load_fromFile("shaders/fs.frag");
-    fs->load_default();
+    fs->load_fromFile("shaders/draw.fs");
+    //fs->load_default();
     if(!fs->compile()) std::cout << "ERROR2!" << std::endl;
 
     program = new Program();
@@ -59,37 +59,41 @@ App::App(const char* name, unsigned int W, unsigned int H)
     
     //---
 
-    rf->getCamera()->setFocus(glm::vec3(0.0, 0.0, 4.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-    rf->getCamera()->setOptic_Orthogonal(-5, 5, -5, 5, 0.1, 40.0);
-    //rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
+    rf->getCamera()->setFocus(glm::vec3(1609, 12, -95), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+    //rf->getCamera()->setOptic_Orthogonal(-5, 5, -5, 5, 0.1, 40.0);
+    rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
+
+    rf->getLights().push_back(glm::vec3(1609, 40, -95));
 
     //rf->camera.applyResize(W, H);
 
     //---
 
-    txt = new Texture("cat.jpg");
-    rect = new Rectangle(glm::vec2(500, 500), glm::vec2(1000, 1000), txt);
+    txt = new Texture("textures/cat.jpg");
+    rect = new Rectangle(glm::vec2(500, 500), glm::vec2(800, 800), txt);
 
-    //drawables.push_back(Model3D::plane());
-    //drawables.back()->setOrigin(glm::vec3(0.0, -0.5, 0.0));
-    //drawables.back()->setPosition(glm::vec3(0, 4, 0));
-    //drawables.back()->applyTranslate(glm::vec3(0, -2, 0));
-    //drawables.back()->setPosition(glm::vec3(0, -4, 0));
-    //drawables.back()->setScale(glm::vec3(3, 3, 3));
-    //drawables.back()->applyTranslate(glm::vec3(-0.5, -0.5, -0.5));
-    //drawables.back()->applyScale(glm::vec3(9, 9, 9));
+    std::vector<DrawableDefinition> dd;
+    if(not IO::readOBJ("objs/Test.obj", dd))
+    {
+        std::cerr << "ERROR LOADING OBJ" << std::endl;
+    }
 
-    //drawables.back()->applyTranslate(glm::vec3(0, 2.0, 0));
+    for(DrawableDefinition& d : dd)
+    {
+        drawables.push_back(new Model3D(d));
+    }
 
-    //trp = new TestRP();    
+    //trp = new TestRP();
+
+    glDisable(GL_CULL_FACE);
 }
 
 App::~App()
 {
-    //for(unsigned int i = 0; i < drawables.size(); i++)
-    //{
-    //    delete drawables[i];
-    //}
+    for(unsigned int i = 0; i < drawables.size(); i++)
+    {
+        delete drawables[i];
+    }
 
     delete program;
     delete rf;
@@ -139,13 +143,15 @@ void App::update()
 }
 
 void App::draw() const
-{
-    
-    program->use();
+{   
+    //program->use();
     rf->startDrawing();
-    //rf->draw(*drawables.back());
+    for(int i = 0; i < drawables.size(); i++)
+    {
+        rf->draw(*drawables[i]);
+    }
     //rf->render(*trp);
-    rf->drawOnSurface(*rect);
+    //rf->drawOnSurface(*rect);
     rf->endDrawing();
 
     glfwSwapBuffers(window);
@@ -171,7 +177,7 @@ void App::callback_cursor(GLFWwindow *window, double xpos, double ypos)
     double diffY = ypos - app->H/2;
     app->rf->getCamera()->rotateY_VRP(-diffY / 360.f);
 
-    //glfwSetCursorPos(window, app->W/2, app->H/2);
+    glfwSetCursorPos(window, app->W/2, app->H/2);
 }
 
 void App::callback_resize(GLFWwindow *window, int width, int height)

@@ -16,6 +16,7 @@ struct DrawableDefinition
     std::vector<float> vertices;
     std::vector<float> normals;
     std::vector<float> texCoords;
+    std::string texName;
     std::vector<float> kas;
     std::vector<float> kds;
     std::vector<float> kss;
@@ -28,7 +29,7 @@ public:
  
 	static bool readFile(const std::string& path, std::string& src);
 
-    static bool readOBJ(const std::string& path, DrawableDefinition& def);
+    static bool readOBJ(const std::string& path, std::vector<DrawableDefinition>& defs);
 
 private:
 
