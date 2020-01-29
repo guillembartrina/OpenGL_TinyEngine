@@ -20,8 +20,10 @@ public:
     void setPosition(const glm::vec2& position);
     void applyTranslate(const glm::vec2& translate);
 
-    void setScale(const glm::vec2& scale);
+    void setSize(const glm::vec2& scale);
     void applyScale(const glm::vec2& scale);
+
+    void rotate(float angle);
 
 protected:
 

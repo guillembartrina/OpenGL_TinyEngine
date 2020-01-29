@@ -33,17 +33,10 @@ private:
     //logic
     double timecount;
 
-    Shader* vs;
-    Shader* fs;
-    Program* program;
-
-    //TestRP* trp;
-
-    std::vector<Model3D*> drawables;
-    Texture* txt;
-    Drawable* rect;
-
     RenderFrame* rf;
+    std::vector<Model3D*> drawables;
+    Texture* texture;
+    Rectangle* rect;
 
     void update();
 

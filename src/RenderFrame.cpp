@@ -58,13 +58,12 @@ RenderFrame::RenderFrame(const glm::ivec2& position, const glm::uvec2& size, con
     "out vec4 fragColor;"\
     "layout(location = 1)uniform mat4 VM;"\
     "layout(location = 10)uniform bool textured;"\
-    "layout(location = 11)uniform bool illumination;"\
     "layout(location = 20)uniform int numLights;"\
     "layout(location = 21)uniform vec3 lights[MAX_LIGHTS];"\
     "layout(binding = 0)uniform sampler2D tex;"\
     "vec3 Ambient()"\
     "{"\
-    "return vec3(0.2, 0.2, 0.2);"\
+    "return (vka);"\
     "}"\
     "vec3 Diffuse(vec3 light)"\
     "{"\
@@ -97,13 +96,15 @@ RenderFrame::RenderFrame(const glm::ivec2& position, const glm::uvec2& size, con
     "}"\
     "void main()"\
     "{"\
-    "vec3 color = Ambient();"\
+    "vec3 color;"\
+    "color = Ambient();"\
     "for(int i = 0; i < numLights; i++)"\
     "{"\
     "vec3 light = (VM * vec4(lights[i], 1.0)).xyz;"\
     "color += (Diffuse(light) + Specular(light));"\
     "}"\
-    "fragColor = vec4(color, 1.0);"\
+    "if(textured) fragColor = texture(tex, vtexCoord) * vec4(color, 1.0);"
+    "else fragColor = vec4(color, 1.0);"\
     "}";
     drawFS = new Shader(ShaderType::Fragment);
     drawFS->load_fromString(drawFSsrc);
@@ -113,31 +114,44 @@ RenderFrame::RenderFrame(const glm::ivec2& position, const glm::uvec2& size, con
     drawProgram->attachShader(*drawFS);
     drawProgram->link();
 
+    /*
+    "layout(location = 11)uniform bool illumination;"
+    "if(illumination)"\
+    "{"\
+    "else"\
+    "{"\
+    "color = vkd;"
+    "}"\
+    "}"\
+    
+    */
+
     std::string drawOnSurfaceVSsrc =
     "#version 450\n"
     "layout(location = 0)in vec3 vertex;"\
     "layout(location = 1)in vec2 texCoord;"\
-    "out vec2 vTexCoord;"\
+    "out vec2 vtexCoord;"\
     "layout(location = 0)uniform mat4 MM;"\
-    "layout(location = 1)uniform mat4 SM;"\
+    "layout(location = 1)uniform mat4 WM;"\
     "void main()"\
     "{"\
-    "vTexCoord = texCoord;"\
-    "gl_Position = SM * MM * vec4(vertex, 1.0);"\
+    "vtexCoord = texCoord;"\
+    "gl_Position = WM * MM * vec4(vertex, 1.0);"\
     "}";
     drawOnSurfaceVS = new Shader(ShaderType::Vertex);
     drawOnSurfaceVS->load_fromString(drawOnSurfaceVSsrc);
     drawOnSurfaceVS->compile();
     std::string drawOnSurfaceFSsrc = 
     "#version 450\n"\
-    "in vec2 vTexCoord;"\
+    "in vec2 vtexCoord;"\
+    "out vec4 fragColor;"\
     "layout(location = 10)uniform bool textured;"\
     "layout(location = 20)uniform vec4 color;"\
     "layout(binding = 0)uniform sampler2D tex;"\
     "void main()"\
     "{"\
-    "if(textured) gl_FragColor = texture(tex, vTexCoord) * color;"\
-    "else gl_FragColor = color;"\
+    "if(textured) fragColor = texture(tex, vtexCoord) * color;"\
+    "else fragColor = color;"\
     "}";
     drawOnSurfaceFS = new Shader(ShaderType::Fragment);
     drawOnSurfaceFS->load_fromString(drawOnSurfaceFSsrc);
@@ -162,8 +176,6 @@ void RenderFrame::startDrawing() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //stencil?
 
     glViewport(position.x, position.y, size.x, size.y);
-
-    glEnable(GL_DEPTH_TEST);
 }
 
 void RenderFrame::draw(const Drawable& d) const

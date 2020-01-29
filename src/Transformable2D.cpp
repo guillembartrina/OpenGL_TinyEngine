@@ -41,7 +41,7 @@ void Transformable2D::applyTranslate(const glm::vec2& translate)
     MM = glm::translate(identity, glm::vec3(translate, 0.0)) * MM;
 }
 
-void Transformable2D::setScale(const glm::vec2& scale)
+void Transformable2D::setSize(const glm::vec2& scale)
 {
     glm::vec2 size = getSize();
     glm::vec2 pos = glm::vec2(MM * glm::vec4(center + glm::vec3(origin, 0.0), 1.0));
@@ -53,4 +53,12 @@ void Transformable2D::setScale(const glm::vec2& scale)
 void Transformable2D::applyScale(const glm::vec2& scale)
 {
     MM = glm::scale(identity, glm::vec3(scale, 1.0)) * MM;
+}
+
+void Transformable2D::rotate(float angle)
+{
+    glm::vec2 pos = glm::vec2(MM * glm::vec4(center + glm::vec3(origin, 0.0), 1.0));
+    MM = glm::translate(identity, -glm::vec3(pos, 0.0)) * MM;
+    MM = glm::rotate(identity, angle, glm::vec3(0.0, 0.0, 1.0)) * MM;
+    MM = glm::translate(identity, glm::vec3(pos, 0.0)) * MM;
 }

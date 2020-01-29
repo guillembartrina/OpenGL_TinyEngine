@@ -42,50 +42,42 @@ App::App(const char* name, unsigned int W, unsigned int H)
 
     //---
 
-    vs = new Shader(ShaderType::Vertex);
-    vs->load_fromFile("shaders/draw.vs");
-    //vs->load_default();
-    if(!vs->compile()) std::cout << "ERROR1!" << std::endl;
-
-    fs = new Shader(ShaderType::Fragment);
-    fs->load_fromFile("shaders/draw.fs");
-    //fs->load_default();
-    if(!fs->compile()) std::cout << "ERROR2!" << std::endl;
-
-    program = new Program();
-    program->attachShader(*vs);
-    program->attachShader(*fs);
-    program->link();
-    
-    //---
-
-    rf->getCamera()->setFocus(glm::vec3(1609, 12, -95), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-    //rf->getCamera()->setOptic_Orthogonal(-5, 5, -5, 5, 0.1, 40.0);
-    rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
-
-    rf->getLights().push_back(glm::vec3(1609, 40, -95));
-
     //rf->camera.applyResize(W, H);
 
+    texture = new Texture("textures/cat.jpg");
+    rect = new Rectangle(glm::vec2(500, 500), glm::vec2(200, 200), texture);
+
     //---
+    drawables.push_back(Model3D::cube());
+    drawables.back()->setOrigin(glm::vec3(0.0, 0.5, 0.0));
+    drawables.back()->setSize(glm::vec3(10.0, 1.0, 10.0));
+    drawables.back()->rotateY(float(3.1415926535/2.0));
+    drawables.back()->setPosition(glm::vec3(5.0, 0.0, 5.0));
 
-    txt = new Texture("textures/cat.jpg");
-    rect = new Rectangle(glm::vec2(500, 500), glm::vec2(800, 800), txt);
-
-    std::vector<DrawableDefinition> dd;
-    if(not IO::readOBJ("objs/Test.obj", dd))
+    std::vector<DrawableDefinition> dds;
+    if(not IO::readOBJ("objs/Crate1.obj", dds))
     {
         std::cerr << "ERROR LOADING OBJ" << std::endl;
     }
 
-    for(DrawableDefinition& d : dd)
+    for(int i = 0; i < 10; i++)
     {
-        drawables.push_back(new Model3D(d));
+        for(DrawableDefinition& dd : dds)
+        {
+            drawables.push_back(new Model3D(dd));
+            drawables.back()->setOrigin(-glm::vec3(1, 1, 1));
+            drawables.back()->setSize(glm::vec3(1, 1, 1));
+            drawables.back()->setPosition(glm::vec3(0.0 + i, 0.0, 0.0));
+        }
     }
 
-    //trp = new TestRP();
+    rf->getCamera()->setFocus(glm::vec3(5.0, 10.0, 5.0), glm::vec3(0.0), glm::vec3(0.0, 0.0, -1.0));
+    rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
 
-    glDisable(GL_CULL_FACE);
+    rf->getLights().push_back(glm::vec3(5.0, 5.0, 5.0));
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 }
 
 App::~App()
@@ -95,9 +87,7 @@ App::~App()
         delete drawables[i];
     }
 
-    delete program;
     delete rf;
-    //delete trp;
     delete rect;
 
     glfwDestroyWindow(window);
@@ -121,22 +111,22 @@ void App::run()
 
 void App::update()
 {
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
         rf->getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
     }
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
         rf->getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
     }
 
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
         rf->getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
     }
 
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
         rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
     }
@@ -144,14 +134,12 @@ void App::update()
 
 void App::draw() const
 {   
-    //program->use();
     rf->startDrawing();
     for(int i = 0; i < drawables.size(); i++)
     {
         rf->draw(*drawables[i]);
     }
-    //rf->render(*trp);
-    //rf->drawOnSurface(*rect);
+    rf->drawOnSurface(*rect);
     rf->endDrawing();
 
     glfwSwapBuffers(window);
@@ -165,6 +153,44 @@ void App::handleEvents()
 void App::callback_key(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+
+    if(action == GLFW_RELEASE) return;
+
+    if(GLFW_KEY_W == key)
+    {
+        //rf->getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
+        app->drawables[10]->applyTranslate(glm::vec3(0, 0, -1));
+    }
+
+    if(GLFW_KEY_S == key)
+    {
+        //rf->getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
+        app->drawables[10]->applyTranslate(glm::vec3(0, 0, 1));
+    }
+
+    if(GLFW_KEY_A == key)
+    {
+        //rf->getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
+        app->drawables[10]->applyTranslate(glm::vec3(-1, 0, 0));
+    }
+
+    if(GLFW_KEY_D == key)
+    {
+        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+        app->drawables[10]->applyTranslate(glm::vec3(1, 0, 0));
+    }
+
+    if(GLFW_KEY_N == key)
+    {
+        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+        app->drawables[10]->setSize(app->drawables[10]->getSize() * 2.f);
+    }
+
+    if(GLFW_KEY_M == key)
+    {
+        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+        app->drawables[10]->setSize(app->drawables[10]->getSize() * 0.5f);
+    }
 }
 
 void App::callback_cursor(GLFWwindow *window, double xpos, double ypos)

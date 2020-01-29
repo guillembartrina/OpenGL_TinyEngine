@@ -20,8 +20,13 @@ public:
     void setPosition(const glm::vec3& position);
     void applyTranslate(const glm::vec3& translate);
 
-    void setScale(const glm::vec3& scale);
+    void setSize(const glm::vec3& scale);
     void applyScale(const glm::vec3& scale);
+
+    void rotateX(float angle);
+    void rotateY(float angle);
+    void rotateZ(float angle);
+    void applyRotation(float angle, const glm::vec3& axis);
     
     void applyTransform(const glm::mat4& transform);
 

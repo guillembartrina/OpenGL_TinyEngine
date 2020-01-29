@@ -36,8 +36,8 @@ Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Tex
                                         0.0,    1.0,
                                         1.0,    1.0 };
 
-        std::vector<unsigned int> indices = { 1,  2,  0,
-                                              1,  3,  2 };
+        std::vector<unsigned int> indices = { 0,  2,  1,
+                                              1,  2,  3 };
 
         glGenBuffers(1, &iVBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iVBO);

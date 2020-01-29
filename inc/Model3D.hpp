@@ -33,6 +33,7 @@ private:
     unsigned int elements;
 
     Texture* texture;
+    bool illumination;
 
     static BB computeBB(const DrawableDefinition& dd);
 };

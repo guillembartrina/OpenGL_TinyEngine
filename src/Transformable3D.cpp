@@ -41,7 +41,7 @@ void Transformable3D::applyTranslate(const glm::vec3& translate)
     MM = glm::translate(identity, translate) * MM;
 }
 
-void Transformable3D::setScale(const glm::vec3& scale)
+void Transformable3D::setSize(const glm::vec3& scale)
 {
     glm::vec3 size = getSize();
     glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
@@ -53,6 +53,35 @@ void Transformable3D::setScale(const glm::vec3& scale)
 void Transformable3D::applyScale(const glm::vec3& scale)
 {
     MM = glm::scale(identity, scale) * MM;
+}
+
+void Transformable3D::rotateX(float angle)
+{
+    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
+    MM = glm::translate(identity, -pos) * MM;
+    MM = glm::rotate(identity, angle, glm::vec3(1.0, 0.0, 0.0)) * MM;
+    MM = glm::translate(identity, pos) * MM;
+}
+
+void Transformable3D::rotateY(float angle)
+{
+    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
+    MM = glm::translate(identity, -pos) * MM;
+    MM = glm::rotate(identity, angle, glm::vec3(0.0, 1.0, 0.0)) * MM;
+    MM = glm::translate(identity, pos) * MM;
+}
+
+void Transformable3D::rotateZ(float angle)
+{
+    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
+    MM = glm::translate(identity, -pos) * MM;
+    MM = glm::rotate(identity, angle, glm::vec3(0.0, 0.0, 1.0)) * MM;
+    MM = glm::translate(identity, pos) * MM;
+}
+
+void Transformable3D::applyRotation(float angle, const glm::vec3& axis)
+{
+    MM = glm::rotate(identity, angle, axis) * MM;
 }
 
 void Transformable3D::applyTransform(const glm::mat4& transform)

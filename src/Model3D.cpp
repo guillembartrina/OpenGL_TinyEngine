@@ -8,6 +8,8 @@ Model3D::Model3D(const DrawableDefinition& dd)
 	indexed = false;
 	texture = nullptr;
 
+	//illumination = (not dd.normals.empty() and not dd.kss.empty() and not dd.kds.empty());
+
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -114,7 +116,9 @@ void Model3D::draw() const
 {
 	glBindVertexArray(VAO);
 	Transformable3D::bind();
-	//if(texture) texture->bind();
+	if(texture) texture->bind();
+	glUniform1i(SUL3D_textured, (texture ? GL_TRUE : GL_FALSE));
+	//glUniform1i(SUL3D_illumination, (illumination ? GL_TRUE : GL_FALSE));
 	if(indexed)
 	{
 		glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, 0);
@@ -133,6 +137,16 @@ Model3D* Model3D::plane()
                     1.0,    0.0,	0.0,
                     0.0,   	1.0,    0.0,
                     1.0,    1.0,    0.0 };
+	
+	dd.normals = { 	0.0,    0.0,    1.0,
+                    0.0,    0.0,    1.0,
+                    0.0,    0.0,    1.0,
+                    0.0,    0.0,    1.0 };
+
+	dd.kds = { 		0.5,    0.5,    0.5,
+                    0.5,    0.5,	0.5,
+                    0.5,   	0.5,    0.5,
+                    0.5,    0.5,    0.5 };
 
     dd.indices = {  1,  2,  0,
                     1,  3,  2 };
@@ -151,22 +165,35 @@ Model3D* Model3D::cube()
                     1.0, 0.0, 1.0, //5
                     1.0, 1.0, 0.0, //6
                     1.0, 1.0, 1.0 };
+	
+	dd.normals = {  -1.0, -1.0, -1.0, //0
+                    -1.0, -1.0, 1.0, //1
+                    -1.0, 1.0, -1.0, //2
+                    -1.0, 1.0, 1.0, //3
+                    1.0, -1.0, -1.0, //4
+                    1.0, -1.0, 1.0, //5
+                    1.0, 1.0, -1.0, //6
+                    1.0, 1.0, 1.0 };
+
+	dd.kds = { 		0.5, 0.5, 0.5, //0
+                    0.5, 0.5, 0.5, //1
+                    0.5, 0.5, 0.5, //2
+                    0.5, 0.5, 0.5, //3
+                    0.5, 0.5, 0.5, //4
+                    0.5, 0.5, 0.5, //5
+                    0.5, 0.5, 0.5, //6
+                    0.5, 0.5, 0.5 };
 
     dd.indices = {  0,  6,  4,
                     0,  2,  6,
-
                     1,  2,  0,
                     1,  3,  2,
-
                     5,  3,  1,
                     5,  7,  3,
-
                     4,  7,  5,
                     4,  6,  7,
-                    
                     4,  1,  0,
                     4,  6,  1,
-                    
                     7,  2,  3,
                     7,  6,  2 };
 
