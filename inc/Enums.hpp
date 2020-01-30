@@ -20,7 +20,6 @@ enum SUL3D
     SUL3D_VM = 1,
     SUL3D_PM = 2,
     SUL3D_textured = 10,
-    SUL3D_illumination = 11,
     SUL3D_numLights = 20,
     SUL3D_lights = 21,
     SUL3D_NUM = 5

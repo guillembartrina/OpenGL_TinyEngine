@@ -3,161 +3,138 @@
 
 #include <iostream>
 
-Model3D::Model3D(const DrawableDefinition& dd)
+Model3D::Model3D(const Model3DDefinition& m3d)
 {
 	indexed = false;
-	texture = nullptr;
-
-	//illumination = (not dd.normals.empty() and not dd.kss.empty() and not dd.kds.empty());
 
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
 	GLuint tmpVBO;
 
-	if(not dd.indices.empty())
+	if(not m3d.indices.empty())
 	{
 		indexed = true;
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * dd.indices.size(), &dd.indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * m3d.indices.size(), &m3d.indices[0], GL_STATIC_DRAW);
 	}
 
-	if(not dd.vertices.empty())
+	if(not m3d.vertices.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.vertices.size(), &dd.vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.vertices.size(), &m3d.vertices[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_vertex);
 	}
 
-	if(not dd.normals.empty())
+	if(not m3d.normals.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.normals.size(), &dd.normals[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.normals.size(), &m3d.normals[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_normal);
 	}
 
-	if(not dd.texCoords.empty())
+	if(not m3d.texCoords.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.texCoords.size(), &dd.texCoords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.texCoords.size(), &m3d.texCoords[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_texCoord);
 
-		texture = new Texture(dd.texName);
+		texture = new Texture(m3d.texName);
 	}
 
-	if(not dd.kas.empty())
+	if(not m3d.kas.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kas.size(), &dd.kas[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.kas.size(), &m3d.kas[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_ka, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_ka);
 	}
 
-	if(not dd.kds.empty())
+	if(not m3d.kds.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kds.size(), &dd.kds[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.kds.size(), &m3d.kds[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_kd, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_kd);
 	}
 
-	if(not dd.kss.empty())
+	if(not m3d.kss.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.kss.size(), &dd.kss[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.kss.size(), &m3d.kss[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_ks, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_ks);
 	}
 
-	if(not dd.nss.empty())
+	if(not m3d.nss.empty())
 	{
 		glGenBuffers(1, &tmpVBO);
 		VBOs.push_back(tmpVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, tmpVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * dd.nss.size(), &dd.nss[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m3d.nss.size(), &m3d.nss[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL3D_ns, 1, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_ns);
 	}
 
 	glBindVertexArray(0);
 
-	elements = (indexed ? dd.indices.size() : dd.vertices.size());
+	elements = (indexed ? m3d.indices.size() : m3d.vertices.size());
 
-	bb = computeBB(dd);
+	bb = computeBB(m3d);
 	center = (bb.first + bb.second) / 2.f;
 }
 
 Model3D::~Model3D()
 {
-	if(texture) delete texture;
-
 	glDeleteBuffers(VBOs.size(), &VBOs[0]);
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void Model3D::draw() const
-{
-	glBindVertexArray(VAO);
-	Transformable3D::bind();
-	if(texture) texture->bind();
-	glUniform1i(SUL3D_textured, (texture ? GL_TRUE : GL_FALSE));
-	//glUniform1i(SUL3D_illumination, (illumination ? GL_TRUE : GL_FALSE));
-	if(indexed)
-	{
-		glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, 0);
-	}
-	else
-	{
-		glDrawArrays(GL_TRIANGLES, 0, elements);
-	}
-	glBindVertexArray(0);
-}
-
 Model3D* Model3D::plane()
 {
-	DrawableDefinition dd;
-    dd.vertices = { 0.0,    0.0,    0.0,
+	Model3DDefinition m3d;
+    m3d.vertices = {0.0,    0.0,    0.0,
                     1.0,    0.0,	0.0,
                     0.0,   	1.0,    0.0,
                     1.0,    1.0,    0.0 };
 	
-	dd.normals = { 	0.0,    0.0,    1.0,
+	m3d.normals = { 0.0,    0.0,    1.0,
                     0.0,    0.0,    1.0,
                     0.0,    0.0,    1.0,
                     0.0,    0.0,    1.0 };
 
-	dd.kds = { 		0.5,    0.5,    0.5,
+	m3d.kds = { 	0.5,    0.5,    0.5,
                     0.5,    0.5,	0.5,
                     0.5,   	0.5,    0.5,
                     0.5,    0.5,    0.5 };
 
-    dd.indices = {  1,  2,  0,
+    m3d.indices = { 1,  2,  0,
                     1,  3,  2 };
 
-	return new Model3D(dd);
+	return new Model3D(m3d);
 }
 
 Model3D* Model3D::cube()
 {
-	DrawableDefinition dd;
-    dd.vertices = { 0.0, 0.0, 0.0, //0
+	Model3DDefinition m3d;
+    m3d.vertices = {0.0, 0.0, 0.0, //0
                     0.0, 0.0, 1.0, //1
                     0.0, 1.0, 0.0, //2
                     0.0, 1.0, 1.0, //3
@@ -166,7 +143,7 @@ Model3D* Model3D::cube()
                     1.0, 1.0, 0.0, //6
                     1.0, 1.0, 1.0 };
 	
-	dd.normals = {  -1.0, -1.0, -1.0, //0
+	m3d.normals = { -1.0, -1.0, -1.0, //0
                     -1.0, -1.0, 1.0, //1
                     -1.0, 1.0, -1.0, //2
                     -1.0, 1.0, 1.0, //3
@@ -175,7 +152,7 @@ Model3D* Model3D::cube()
                     1.0, 1.0, -1.0, //6
                     1.0, 1.0, 1.0 };
 
-	dd.kds = { 		0.5, 0.5, 0.5, //0
+	m3d.kds = { 	0.5, 0.5, 0.5, //0
                     0.5, 0.5, 0.5, //1
                     0.5, 0.5, 0.5, //2
                     0.5, 0.5, 0.5, //3
@@ -184,7 +161,7 @@ Model3D* Model3D::cube()
                     0.5, 0.5, 0.5, //6
                     0.5, 0.5, 0.5 };
 
-    dd.indices = {  0,  6,  4,
+    m3d.indices = { 0,  6,  4,
                     0,  2,  6,
                     1,  2,  0,
                     1,  3,  2,
@@ -197,13 +174,25 @@ Model3D* Model3D::cube()
                     7,  2,  3,
                     7,  6,  2 };
 
-	return new Model3D(dd);
+	return new Model3D(m3d);
 }
 
-BB Model3D::computeBB(const DrawableDefinition& dd)
+void Model3D::specificDraw() const
 {
-	const std::vector<unsigned int>& I = dd.indices;
-	const std::vector<float>& V = dd.vertices;
+	if(indexed)
+	{
+		glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glDrawArrays(GL_TRIANGLES, 0, elements);
+	}
+}
+
+BB Model3D::computeBB(const Model3DDefinition& m3d)
+{
+	const std::vector<unsigned int>& I = m3d.indices;
+	const std::vector<float>& V = m3d.vertices;
 
 	glm::vec3 min, max;
 

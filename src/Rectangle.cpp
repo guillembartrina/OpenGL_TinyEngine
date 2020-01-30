@@ -2,13 +2,14 @@
 #include "Rectangle.hpp"
 
 #include <vector>
-#include <iostream>
 
-unsigned int Rectangle::numInstances = 0;
-GLuint Rectangle::VAO = 0;
-GLuint Rectangle::iVBO = 0; 
-GLuint Rectangle::vVBO = 0; 
-GLuint Rectangle::tVBO = 0; 
+#include "GLM/gtc/matrix_transform.hpp"
+
+unsigned int Rectangle::snumInstances = 0;
+GLuint Rectangle::sVAO = 0;
+GLuint Rectangle::siVBO = 0; 
+GLuint Rectangle::svVBO = 0; 
+GLuint Rectangle::stVBO = 0; 
 
 Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Texture* texture, const glm::vec4& color)
 {
@@ -21,10 +22,10 @@ Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Tex
     this->color = color;
     this->texture = texture;
 
-    if(numInstances == 0)
+    if(snumInstances == 0)
     {
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
+        glGenVertexArrays(1, &sVAO);
+        glBindVertexArray(sVAO);
 
         std::vector<float> vertices = { -0.5,   -0.5,   0.0,
                                         0.5,    -0.5,	0.0,
@@ -39,46 +40,43 @@ Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Tex
         std::vector<unsigned int> indices = { 0,  2,  1,
                                               1,  2,  3 };
 
-        glGenBuffers(1, &iVBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iVBO);
+        glGenBuffers(1, &siVBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, siVBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
-        glGenBuffers(1, &vVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, vVBO);
+        glGenBuffers(1, &svVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, svVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL2D_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL2D_vertex);
 
-        glGenBuffers(1, &tVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, tVBO);
+        glGenBuffers(1, &stVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, stVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(SAL2D_texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL2D_texCoord);
         
         glBindVertexArray(0);
     }
-    numInstances++;
+    snumInstances++;
+
+    VAO = sVAO;
 }
 
 Rectangle::~Rectangle()
 {
-    numInstances--;
-    if(numInstances == 0)
+    snumInstances--;
+    if(snumInstances == 0)
     {
-        glDeleteBuffers(1, &iVBO);
-        glDeleteBuffers(1, &vVBO);
-        glDeleteBuffers(1, &tVBO);
-        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &siVBO);
+        glDeleteBuffers(1, &svVBO);
+        glDeleteBuffers(1, &stVBO);
+        glDeleteVertexArrays(1, &sVAO);
     }
 }
 
-void Rectangle::draw() const
+void Rectangle::specificDraw() const
 {
-    glBindVertexArray(VAO);
-    Transformable2D::bind();
     glUniform4fv(SUL2D_color, 1, &color[0]);
-    glUniform1i(SUL2D_textured, (texture ? GL_TRUE : GL_FALSE));
-    if(texture) texture->bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
-    glBindVertexArray(0);
 }

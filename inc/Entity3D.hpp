@@ -1,16 +1,14 @@
 
-#ifndef TRANSFORMABLE3D_HPP
-#define TRANSFORMABLE3D_HPP
+#ifndef ENTITY3D_HPP
+#define ENTITY3D_HPP
 
-#include "GLM/glm.hpp"
+#include "Entity.hpp"
 
-#include "Transformable.hpp"
-
-class Transformable3D : public Transformable
+class Entity3D : public Entity
 {
 public:
 
-    ~Transformable3D();
+    ~Entity3D();
 
     glm::vec3 getCenter() const;
     glm::vec3 getSize() const;
@@ -32,11 +30,10 @@ public:
 
 protected:
 
-    Transformable3D();
+    Entity3D();
 
 private:
 
-    glm::vec3 origin;
 };
 
 #endif

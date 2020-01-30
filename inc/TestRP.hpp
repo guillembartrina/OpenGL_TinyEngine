@@ -2,8 +2,8 @@
 #ifndef TESTRP_HPP
 #define TESTTP_HPP
 
-#include "RenderProcedure.hpp"
 #include "Model3D.hpp"
+#include "RenderProcedure.hpp"
 
 class TestRP : public RenderProcedure
 {

@@ -54,7 +54,7 @@ App::App(const char* name, unsigned int W, unsigned int H)
     drawables.back()->rotateY(float(3.1415926535/2.0));
     drawables.back()->setPosition(glm::vec3(5.0, 0.0, 5.0));
 
-    std::vector<DrawableDefinition> dds;
+    std::vector<Model3DDefinition> dds;
     if(not IO::readOBJ("objs/Crate1.obj", dds))
     {
         std::cerr << "ERROR LOADING OBJ" << std::endl;
@@ -62,7 +62,7 @@ App::App(const char* name, unsigned int W, unsigned int H)
 
     for(int i = 0; i < 10; i++)
     {
-        for(DrawableDefinition& dd : dds)
+        for(Model3DDefinition& dd : dds)
         {
             drawables.push_back(new Model3D(dd));
             drawables.back()->setOrigin(-glm::vec3(1, 1, 1));

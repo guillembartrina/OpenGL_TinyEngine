@@ -21,7 +21,7 @@ bool IO::readFile(const std::string& path, std::string& src)
 	return false;
 }
 
-bool IO::readOBJ(const std::string& path, std::vector<DrawableDefinition>& defs)
+bool IO::readOBJ(const std::string& path, std::vector<Model3DDefinition>& defs)
 {
 	defs.clear();
 
@@ -34,8 +34,8 @@ bool IO::readOBJ(const std::string& path, std::vector<DrawableDefinition>& defs)
 	{
 		objl::Mesh& mesh = loader.LoadedMeshes[i];
 
-		defs.push_back(DrawableDefinition());
-		DrawableDefinition& dd = defs.back();
+		defs.push_back(Model3DDefinition());
+		Model3DDefinition& dd = defs.back();
 
 		dd.indices = mesh.Indices;
 

@@ -7,10 +7,10 @@
 #include <sstream>
 #include <vector>
 
-struct DrawableDefinition
+struct Model3DDefinition
 {
-    DrawableDefinition() {}
-    ~DrawableDefinition() {}
+    Model3DDefinition() {}
+    ~Model3DDefinition() {}
     
     std::vector<unsigned int> indices;
     std::vector<float> vertices;
@@ -29,7 +29,7 @@ public:
  
 	static bool readFile(const std::string& path, std::string& src);
 
-    static bool readOBJ(const std::string& path, std::vector<DrawableDefinition>& defs);
+    static bool readOBJ(const std::string& path, std::vector<Model3DDefinition>& defs);
 
 private:
 

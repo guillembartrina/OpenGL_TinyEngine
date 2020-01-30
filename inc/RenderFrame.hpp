@@ -2,13 +2,12 @@
 #ifndef RENDERFRAME_HPP
 #define RENDERFRAME_HPP
 
-#include "Shader.hpp"
 #include "Program.hpp"
 #include "Camera.hpp"
-#include "Drawable.hpp"
+#include "Entity2D.hpp"
+#include "Entity3D.hpp"
 #include "RenderProcedure.hpp"
 
-class Drawable;
 class RenderProcedure;
 
 class RenderFrame
@@ -22,8 +21,8 @@ public:
     //void setDrawOnSurfaceProgram(Program* prog):
 
     void startDrawing() const;
-    void draw(const Drawable& d) const;
-    void drawOnSurface(const Drawable& d) const;
+    void draw(const Entity3D& d);
+    void drawOnSurface(const Entity2D& d);
     void render(const RenderProcedure& r) const;
     void endDrawing() const;
 
@@ -43,10 +42,18 @@ private:
 
     glm::mat4 surfaceOrtho;
 
-    Shader* drawVS, *drawFS;
+    bool loadedDraw, loadedDrawOnSurface;
+
     Program* drawProgram;
-    Shader* drawOnSurfaceVS, *drawOnSurfaceFS;
     Program* drawOnSurfaceProgram;
+
+    static unsigned int snumInstances;
+    static Shader* sdrawVS;
+    static Shader* sdrawFS;
+    static Program* sdrawProgram;
+    static Shader* sdrawOnSurfaceVS;
+    static Shader* sdrawOnSurfaceFS;
+    static Program* sdrawOnSurfaceProgram;
 };
 
 #endif

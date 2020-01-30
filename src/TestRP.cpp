@@ -3,7 +3,7 @@
 
 TestRP::TestRP()
 {
-    DrawableDefinition dd;
+    Model3DDefinition dd;
     dd.vertices = { 0.0, 0.0, 0.0, //0
                     0.0, 0.0, 1.0, //1
                     0.0, 1.0, 0.0, //2

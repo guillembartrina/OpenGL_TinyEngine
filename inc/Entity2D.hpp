@@ -1,16 +1,14 @@
 
-#ifndef TRANSFORMABLE2D_HPP
-#define TRANSFORMABLE2D_HPP
+#ifndef ENTITY2D_HPP
+#define ENTITY2D_HPP
 
-#include "GLM/glm.hpp"
+#include "Entity.hpp"
 
-#include "Transformable.hpp"
-
-class Transformable2D : public Transformable
+class Entity2D : public Entity
 {
 public:
 
-    ~Transformable2D();
+    ~Entity2D();
 
     glm::vec2 getCenter() const;
     glm::vec2 getSize() const;
@@ -27,11 +25,10 @@ public:
 
 protected:
 
-    Transformable2D();
+    Entity2D();
 
 private:
 
-    glm::vec2 origin;
 };
 
 #endif
