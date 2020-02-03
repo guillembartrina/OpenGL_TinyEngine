@@ -21,13 +21,15 @@ public:
     //void setDrawOnSurfaceProgram(Program* prog):
 
     void startDrawing() const;
-    void draw(const Entity3D& d);
-    void drawOnSurface(const Entity2D& d);
-    void render(const RenderProcedure& r) const;
+    void draw(Entity3D& d);
+    void drawOnSurface(Entity2D& d);
+    void render(const RenderProcedure& r);
     void endDrawing() const;
 
     Camera* getCamera();
     std::vector<glm::vec3>& getLights();
+
+    void sampleTexture(Texture* texture);
 
 private:
 

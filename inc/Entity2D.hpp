@@ -10,18 +10,20 @@ public:
 
     ~Entity2D();
 
-    glm::vec2 getCenter() const;
-    glm::vec2 getSize() const;
-
-    void setOrigin(const glm::vec2& origin);
-
+    glm::vec2 getPosition() const;
     void setPosition(const glm::vec2& position);
-    void applyTranslate(const glm::vec2& translate);
+    void translate(const glm::vec2& translation);
 
-    void setSize(const glm::vec2& scale);
-    void applyScale(const glm::vec2& scale);
+    glm::vec2 getSize() const;
+    void setSize(const glm::vec2& size);
+    void scale(const glm::vec2& scalation);
 
-    void rotate(float angle);
+    float getAngle() const;
+    void setAngle(float angle);
+    void rotate(float rotation);
+
+    glm::vec2 getOrigin() const;
+    void setOrigin(const glm::vec2& origin);
 
 protected:
 

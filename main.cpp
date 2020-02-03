@@ -9,7 +9,7 @@ int main()
 {
 	try
 	{
-		App app("OpenGL", 1000, 1000);
+		App app("OpenGL", 800, 800);
 		app.run();
 	}
 	catch(std::runtime_error& re)

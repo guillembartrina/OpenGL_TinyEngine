@@ -193,7 +193,7 @@ void RenderFrame::startDrawing() const
     glViewport(position.x, position.y, size.x, size.y);
 }
 
-void RenderFrame::draw(const Entity3D& d)
+void RenderFrame::draw(Entity3D& d)
 {
     if(not loadedDraw)
     {
@@ -208,7 +208,7 @@ void RenderFrame::draw(const Entity3D& d)
     d.draw();
 }
 
-void RenderFrame::drawOnSurface(const Entity2D& d) //Change?
+void RenderFrame::drawOnSurface(Entity2D& d) //Change?
 {
     if(not loadedDrawOnSurface)
     {
@@ -222,7 +222,7 @@ void RenderFrame::drawOnSurface(const Entity2D& d) //Change?
     glEnable(GL_DEPTH_TEST);
 }
 
-void RenderFrame::render(const RenderProcedure& r) const
+void RenderFrame::render(const RenderProcedure& r)
 {
     r.render(*this);
 }
@@ -240,4 +240,10 @@ Camera* RenderFrame::getCamera()
 std::vector<glm::vec3>& RenderFrame::getLights()
 {
     return lights;
+}
+
+void RenderFrame::sampleTexture(Texture* texture)
+{
+    texture->bind();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texture->getW(), texture->getH());
 }

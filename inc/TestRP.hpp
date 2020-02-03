@@ -4,19 +4,29 @@
 
 #include "Model3D.hpp"
 #include "RenderProcedure.hpp"
+#include "Shader.hpp"
+#include "Program.hpp"
 
 class TestRP : public RenderProcedure
 {
 public:
 
-    TestRP();
+    TestRP(Texture* texture);
     ~TestRP();
 
-    void render() const;
+    Texture* getTexture();
+
+
+    void init(const RenderFrame& rf);
+    void render(const RenderFrame& rf) const;
 
 private:
 
-    Model3D* cube;
+    Model3D* plane;
+    Texture* texture;
+    Shader* vs;
+    Shader* fs;
+    Program* p;
 };
 
 #endif

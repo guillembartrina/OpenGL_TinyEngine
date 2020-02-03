@@ -10,6 +10,7 @@ class RenderProcedure
 {
 public:
 
+    virtual void init(const RenderFrame& rf) = 0;
     virtual void render(const RenderFrame& rf) const = 0;
 };
 

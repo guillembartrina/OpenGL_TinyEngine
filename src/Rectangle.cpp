@@ -13,24 +13,25 @@ GLuint Rectangle::stVBO = 0;
 
 Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Texture* texture, const glm::vec4& color)
 {
-    center = glm::vec3(0.0, 0.0, 0.0);
-    bb.first = glm::vec3(-0.5, -0.5, 0.0);
-    bb.second = glm::vec3(0.5, 0.5, 0.0);
+    this->texture = texture;
+    this->position = glm::vec3(position, 0.0);
+    this->size = glm::vec3(size, 1.0);
+    MMOutOfDate = true;
 
-    MM = glm::translate(identity, glm::vec3(position, 0.0)) * glm::scale(identity, glm::vec3(size, 0.0));
+    bb.first = glm::vec3(0.0, 0.0, 0.0);
+    bb.second = glm::vec3(1.0, 1.0, 1.0);
 
     this->color = color;
-    this->texture = texture;
 
     if(snumInstances == 0)
     {
         glGenVertexArrays(1, &sVAO);
         glBindVertexArray(sVAO);
 
-        std::vector<float> vertices = { -0.5,   -0.5,   0.0,
-                                        0.5,    -0.5,	0.0,
-                                        -0.5,   0.5,    0.0,
-                                        0.5,    0.5,    0.0 };
+        std::vector<float> vertices = { 0.0,    0.0,    0.0,
+                                        1.0,    0.0,	0.0,
+                                        0.0,    1.0,    0.0,
+                                        1.0,    1.0,    0.0 };
         
         std::vector<float> texCoords = {0.0,    0.0,
                                         1.0,    0.0,
@@ -61,6 +62,7 @@ Rectangle::Rectangle(const glm::vec2& position, const glm::vec2& size, const Tex
     snumInstances++;
 
     VAO = sVAO;
+    blending = true;
 }
 
 Rectangle::~Rectangle()

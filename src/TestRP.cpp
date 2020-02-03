@@ -1,45 +1,67 @@
 
 #include "TestRP.hpp"
 
-TestRP::TestRP()
+#include <iostream>
+
+TestRP::TestRP(Texture* texture)
 {
-    Model3DDefinition dd;
-    dd.vertices = { 0.0, 0.0, 0.0, //0
-                    0.0, 0.0, 1.0, //1
-                    0.0, 1.0, 0.0, //2
-                    0.0, 1.0, 1.0, //3
-                    1.0, 0.0, 0.0, //4
-                    1.0, 0.0, 1.0, //5
-                    1.0, 1.0, 0.0, //6
-                    1.0, 1.0, 1.0 };
+    plane = Model3D::plane();
+    plane->translate(glm::vec3(-0.5));
+    plane->scale(glm::vec3(2.0));
 
-    dd.indices = {  0,  6,  4,
-                    0,  2,  6,
+    std::string vsSrc =
+    "#version 450\n"\
+    "layout(location = 0)in vec3 vertex;"\
+    "layout(location = 2)in vec2 texCoord;"\
+    "layout(location = 0)uniform mat4 MM;"\
+    "out vec2 vtexCoord;"\
+    "void main()"\
+    "{"\
+    "vtexCoord = texCoord;"\
+    "gl_Position = MM * vec4(vertex, 1.0);"\
+    "}";
+    vs = new Shader(ShaderType::Vertex);
+    vs->load_fromString(vsSrc);
+    vs->compile();
 
-                    1,  2,  0,
-                    1,  3,  2,
+    std::string fsSrc =
+    "#version 450\n"\
+    "layout(binding = 0)uniform sampler2D tex;"\
+    "in vec2 vtexCoord;"\
+    "out vec4 fragColor;"\
+    "void main()"\
+    "{"\
+    "fragColor = texture(tex, vtexCoord);"\
+    "}";
+    fs = new Shader(ShaderType::Fragment);
+    fs->load_fromString(fsSrc);
+    fs->compile();
 
-                    5,  3,  1,
-                    5,  7,  3,
+    p = new Program();
+    p->attachShader(*vs);
+    p->attachShader(*fs);
+    p->link();
 
-                    4,  7,  5,
-                    4,  6,  7,
-                    
-                    4,  1,  0,
-                    4,  6,  1,
-                    
-                    7,  2,  3,
-                    7,  6,  2 };
-
-    cube = new Model3D(dd);
+    this->texture = texture;
 }
 
 TestRP::~TestRP()
 {
-    delete cube;
+    delete p;
+    delete vs, fs;
+    delete plane;
 }
 
-void TestRP::render() const
+Texture* TestRP::getTexture()
 {
-    cube->draw();
+    return texture;
+}
+
+void TestRP::init(const RenderFrame& rf) {}
+
+void TestRP::render(const RenderFrame& rf) const
+{
+    p->use();
+    texture->bind();
+    plane->draw();
 }

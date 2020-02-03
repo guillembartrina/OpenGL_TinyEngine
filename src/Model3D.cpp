@@ -98,7 +98,10 @@ Model3D::Model3D(const Model3DDefinition& m3d)
 	elements = (indexed ? m3d.indices.size() : m3d.vertices.size());
 
 	bb = computeBB(m3d);
-	center = (bb.first + bb.second) / 2.f;
+
+	position = (bb.first+bb.second)/2.f;
+    size = (bb.second-bb.first);
+    MMOutOfDate = true;
 }
 
 Model3D::~Model3D()
@@ -119,7 +122,7 @@ Model3D* Model3D::plane()
                     0.0,    0.0,    1.0,
                     0.0,    0.0,    1.0,
                     0.0,    0.0,    1.0 };
-
+					
 	m3d.kds = { 	0.5,    0.5,    0.5,
                     0.5,    0.5,	0.5,
                     0.5,   	0.5,    0.5,

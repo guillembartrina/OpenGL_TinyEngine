@@ -10,24 +10,27 @@ public:
 
     ~Entity3D();
 
-    glm::vec3 getCenter() const;
-    glm::vec3 getSize() const;
-
-    void setOrigin(const glm::vec3& origin);
-
+    glm::vec3 getPosition() const;
     void setPosition(const glm::vec3& position);
-    void applyTranslate(const glm::vec3& translate);
+    void translate(const glm::vec3& translation);
 
-    void setSize(const glm::vec3& scale);
-    void applyScale(const glm::vec3& scale);
+    glm::vec3 getSize() const;
+    void setSize(const glm::vec3& size);
+    void scale(const glm::vec3& scalation);
 
-    void rotateX(float angle);
-    void rotateY(float angle);
-    void rotateZ(float angle);
-    void applyRotation(float angle, const glm::vec3& axis);
+    float getAngleX() const;
+    float getAngleY() const;
+    float getAngleZ() const;
+    void setAngleX(float angle);
+    void setAngleY(float angle);
+    void setAngleZ(float angle);
+    void rotateX(float rotation);
+    void rotateY(float rotation);
+    void rotateZ(float rotation);
+
+    glm::vec3 getOrigin() const;
+    void setOrigin(const glm::vec3& origin);
     
-    void applyTransform(const glm::mat4& transform);
-
 protected:
 
     Entity3D();

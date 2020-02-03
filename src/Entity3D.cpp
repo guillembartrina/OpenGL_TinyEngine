@@ -7,80 +7,101 @@ Entity3D::Entity3D() {}
 
 Entity3D::~Entity3D() {}
 
-glm::vec3 Entity3D::getCenter() const
+glm::vec3 Entity3D::getPosition() const
 {
-    return glm::vec3(MM * glm::vec4(center + origin, 1.0));
+    return position;
+}
+
+void Entity3D::setPosition(const glm::vec3& position)
+{
+    this->position = position;
+    MMOutOfDate = true;
+}
+
+void Entity3D::translate(const glm::vec3& translation)
+{
+    position += translation;
+    MMOutOfDate = true;
 }
 
 glm::vec3 Entity3D::getSize() const
 {
-    glm::vec3 min = glm::vec3(MM * glm::vec4(bb.first, 1.0));
-    glm::vec3 max = glm::vec3(MM * glm::vec4(bb.second, 1.0));
+    return size;
+}
 
-    return (max - min);
+void Entity3D::setSize(const glm::vec3& size)
+{
+    this->size = size;
+    MMOutOfDate = true;
+}
+
+void Entity3D::scale(const glm::vec3& scalation)
+{
+    size *= scalation;
+    MMOutOfDate = true;
+}
+
+float Entity3D::getAngleX() const
+{
+    return rotX;
+}
+
+float Entity3D::getAngleY() const
+{
+    return rotY;
+}
+
+float Entity3D::getAngleZ() const
+{
+    return rotZ;
+}
+
+void Entity3D::setAngleX(float angle)
+{
+    rotX = angle;
+    MMOutOfDate = true;
+}
+
+void Entity3D::setAngleY(float angle)
+{
+    rotY = angle;
+    MMOutOfDate = true;
+}
+
+void Entity3D::setAngleZ(float angle)
+{
+    rotZ = angle;
+    MMOutOfDate = true;
+}
+
+void Entity3D::rotateX(float rotation)
+{
+    rotX += rotation;
+    rotX = glm::mod(rotX, float(2.f*PI));
+    MMOutOfDate = true;
+}
+
+void Entity3D::rotateY(float rotation)
+{
+    rotY += rotation;
+    rotY = glm::mod(rotY, float(2.f*PI));
+    MMOutOfDate = true;
+}
+
+void Entity3D::rotateZ(float rotation)
+{
+    rotZ += rotation;
+    rotZ = glm::mod(rotZ, float(2.f*PI));
+    MMOutOfDate = true;
+}
+
+glm::vec3 Entity3D::getOrigin() const
+{
+    return origin;
 }
 
 void Entity3D::setOrigin(const glm::vec3& origin)
 {
     this->origin = origin;
-}
-
-void Entity3D::setPosition(const glm::vec3& position)
-{
-    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(identity, -pos) * MM;
-    MM = glm::translate(identity, position) * MM;
-}
-
-void Entity3D::applyTranslate(const glm::vec3& translate)
-{
-    MM = glm::translate(identity, translate) * MM;
-}
-
-void Entity3D::setSize(const glm::vec3& scale)
-{
-    glm::vec3 size = getSize();
-    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(identity, -pos) * MM;
-    MM = glm::scale(identity, glm::vec3(scale.x / size.x, scale.y / size.y, scale.z / size.z)) * MM;
-    MM = glm::translate(identity, pos) * MM;
-}
-
-void Entity3D::applyScale(const glm::vec3& scale)
-{
-    MM = glm::scale(identity, scale) * MM;
-}
-
-void Entity3D::rotateX(float angle)
-{
-    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(identity, -pos) * MM;
-    MM = glm::rotate(identity, angle, glm::vec3(1.0, 0.0, 0.0)) * MM;
-    MM = glm::translate(identity, pos) * MM;
-}
-
-void Entity3D::rotateY(float angle)
-{
-    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(identity, -pos) * MM;
-    MM = glm::rotate(identity, angle, glm::vec3(0.0, 1.0, 0.0)) * MM;
-    MM = glm::translate(identity, pos) * MM;
-}
-
-void Entity3D::rotateZ(float angle)
-{
-    glm::vec3 pos = glm::vec3(MM * glm::vec4(center + origin, 1.0));
-    MM = glm::translate(identity, -pos) * MM;
-    MM = glm::rotate(identity, angle, glm::vec3(0.0, 0.0, 1.0)) * MM;
-    MM = glm::translate(identity, pos) * MM;
-}
-
-void Entity3D::applyRotation(float angle, const glm::vec3& axis)
-{
-    MM = glm::rotate(identity, angle, axis) * MM;
-}
-
-void Entity3D::applyTransform(const glm::mat4& transform)
-{
-    MM = transform * MM;
+    MMOutOfDate = true;
 }
