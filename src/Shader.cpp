@@ -5,7 +5,7 @@
 
 #include "IO.hpp"
 
-const std::string Shader::defaultShaders[ShaderType::ShaderType_NUM] = 
+const std::string Shader::defaultShaders[ShaderType_NUM] = 
 {
     //default VS
     "#version 450\n"\
@@ -44,13 +44,13 @@ Shader::Shader(ShaderType type)
     GLenum t;
     switch(type)
     {
-        case Vertex:
+        case ShaderType_Vertex:
             t = GL_VERTEX_SHADER;
             break;
-        case Geomerty:
+        case ShaderType_Geomerty:
             t = GL_GEOMETRY_SHADER;
             break;
-        case Fragment:
+        case ShaderType_Fragment:
             t = GL_FRAGMENT_SHADER;
             break;
     }

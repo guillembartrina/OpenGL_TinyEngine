@@ -43,20 +43,27 @@ App::App(const char* name, unsigned int W, unsigned int H)
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
+    snvs = new Shader(ShaderType_Vertex);
+    snvs->load_fromFile("shaders/showNormal.vs");
+    snvs->compile();
+    snfs = new Shader(ShaderType_Fragment);
+    snfs->load_fromFile("shaders/showNormal.fs");
+    snfs->compile();
+    snp = new Program();
+    snp->attachShader(*snvs);
+    snp->attachShader(*snfs);
+    snp->link();
+
     rf = new RenderFrame(glm::vec2(0, 0), glm::vec2(W, H));
 
     //---
 
-    //rf->camera.applyResize(W, H);
-
-    texture = new Texture("textures/cat.jpg");
-    Texture* dd = new Texture(W, H, FBComponent_Color);
-
     //---
-    drawables.push_back(Model3D::cube());
-    drawables.back()->setOrigin(glm::vec3(0.0, 1.0, 0.0));
-    drawables.back()->setSize(glm::vec3(10.0, 1.0, 10.0));
-    drawables.back()->setPosition(glm::vec3(5.0, 0.0, 5.0));
+    Entity3D* base = Model3D::cube();
+    base->setOrigin(glm::vec3(0.0, 1.0, 0.0));
+    base->setSize(glm::vec3(10.0, 1.0, 10.0));
+    base->setPosition(glm::vec3(5.0, 0.0, 5.0));
+    scene.getEntities().insert(scene.getEntities().end(), base);
 
     std::vector<Model3DDefinition> dds;
     if(not IO::readOBJ("objs/Crate1.obj", dds))
@@ -68,39 +75,24 @@ App::App(const char* name, unsigned int W, unsigned int H)
     {
         for(Model3DDefinition& dd : dds)
         {
-            drawables.push_back(new Model3D(dd));
-            drawables.back()->setSize(glm::vec3(1, 1, 1));
-            drawables.back()->setPosition(glm::vec3(0.5 + i, 0.0, 0.5));
+            Model3D* cube = new Model3D(dd);
+            cube->setSize(glm::vec3(1, 1, 1));
+            cube->setPosition(glm::vec3(0.5 + i, 0.0, 0.5));
+            scene.getEntities().insert(scene.getEntities().end(), cube);
         }
     }
 
-    rf->getCamera()->setFocus(glm::vec3(5.0, 10.0, 5.0), glm::vec3(5.0, 0.0, 5.0), glm::vec3(0.0, 0.0, -1.0));
-    rf->getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
+    scene.getCamera()->setFocus(glm::vec3(5.0, 10.0, 5.0), glm::vec3(5.0, 0.0, 5.0), glm::vec3(0.0, 0.0, -1.0));
+    scene.getCamera()->setOptic_Perspective(90.f * (3.1415926535 / 180.0), 1.0, 0.1, 40.0);
+    scene.getLights().insert(scene.getLights().end(), glm::vec3(5.0, 5.0, 5.0));
 
-    rf->getLights().push_back(glm::vec3(5.0, 5.0, 5.0));
-
-    rf->startDrawing();
-    for(int i = 0; i < drawables.size(); i++)
-    {
-        rf->draw(*drawables[i]);
-    }
-    rf->endDrawing();
-
-    rf->sampleTexture(dd);
-
-    rect = new Rectangle(glm::vec2(W/2, H/2), glm::vec2(100, 100), texture);
+    Program::getDefaultDrawProgram()->use();
 }
 
 App::~App()
 {
-    for(unsigned int i = 0; i < drawables.size(); i++)
-    {
-        delete drawables[i];
-    }
-
-    delete texture;
     delete rf;
-    delete rect;
+    delete Program::getDefaultDrawProgram();
 
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -125,35 +117,29 @@ void App::update()
 {
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
-        rf->getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
+        scene.getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
     }
 
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
-        rf->getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
+        scene.getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
     }
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
-        rf->getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
+        scene.getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
     }
 
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
-        rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+        scene.getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
     }
 }
 
 void App::draw() const
-{   
-    rf->startDrawing();
-    for(int i = 0; i < drawables.size(); i++)
-    {
-        rf->draw(*drawables[i]);
-    }
-    rf->drawOnSurface(*rect);
-    rf->endDrawing();
-
+{
+    rf->clean();
+    scene.draw(*rf);
     glfwSwapBuffers(window);
 }
 
@@ -170,38 +156,32 @@ void App::callback_key(GLFWwindow *window, int key, int scancode, int action, in
 
     if(GLFW_KEY_W == key)
     {
-        //rf->getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
-        app->drawables[10]->translate(glm::vec3(0, 0, -1));
+        app->scene.getEntities().back()->translate(glm::vec3(0, 0, -1));
     }
 
     if(GLFW_KEY_S == key)
     {
-        //rf->getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
-        app->drawables[10]->translate(glm::vec3(0, 0, 1));
+        app->scene.getEntities().back()->translate(glm::vec3(0, 0, 1));
     }
 
     if(GLFW_KEY_A == key)
     {
-        //rf->getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
-        app->drawables[10]->translate(glm::vec3(-1, 0, 0));
+        app->scene.getEntities().back()->translate(glm::vec3(-1, 0, 0));
     }
 
     if(GLFW_KEY_D == key)
     {
-        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
-        app->drawables[10]->translate(glm::vec3(1, 0, 0));
+        app->scene.getEntities().back()->translate(glm::vec3(1, 0, 0));
     }
 
     if(GLFW_KEY_N == key)
     {
-        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
-        app->drawables[10]->rotateY(PI/4.f);
+        app->scene.getEntities().back()->rotateY(PI/4.f);
     }
 
     if(GLFW_KEY_M == key)
     {
-        //rf->getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
-        app->drawables[10]->rotateZ(PI/4.f);
+        app->scene.getEntities().back()->rotateZ(PI/4.f);
     }
 }
 
@@ -210,10 +190,10 @@ void App::callback_cursor(GLFWwindow *window, double xpos, double ypos)
     App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
 
     double diffX = xpos - app->W/2;
-    app->rf->getCamera()->rotateX_VRP(-diffX / 360.f);
+    app->scene.getCamera()->rotateX_VRP(-diffX / 360.f);
 
     double diffY = ypos - app->H/2;
-    app->rf->getCamera()->rotateY_VRP(-diffY / 360.f);
+    app->scene.getCamera()->rotateY_VRP(-diffY / 360.f);
 
     glfwSetCursorPos(window, app->W/2, app->H/2);
 }
@@ -221,9 +201,4 @@ void App::callback_cursor(GLFWwindow *window, double xpos, double ypos)
 void App::callback_resize(GLFWwindow *window, int width, int height)
 {
     App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
-
-    //app->W = width;
-	//app->H = height;
-
-	//app->rf->camera.applyResize(width, height);
 }

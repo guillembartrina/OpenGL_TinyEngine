@@ -5,6 +5,8 @@
 
 #include "GLM/gtc/matrix_transform.hpp"
 
+#include "Program.hpp"
+
 unsigned int Rectangle::snumInstances = 0;
 GLuint Rectangle::sVAO = 0;
 GLuint Rectangle::siVBO = 0; 
@@ -79,6 +81,6 @@ Rectangle::~Rectangle()
 
 void Rectangle::specificDraw() const
 {
-    glUniform4fv(SUL2D_color, 1, &color[0]);
+    Program::getActiveProgram()->setUniformValue(SUL2D_color, color);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
 }

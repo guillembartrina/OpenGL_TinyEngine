@@ -2,17 +2,11 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
-#include <utility>
-
 #include "GL/glew.h"
 #include "GLM/glm.hpp"
 
 #include "Enums.hpp"
 #include "Texture.hpp"
-
-#define PI 3.14159265358979323846
-
-typedef std::pair<glm::vec3,glm::vec3> BB;
 
 class Entity
 {
@@ -21,9 +15,9 @@ public:
     ~Entity();
 
     void setMMLocation(GLuint MMLocation);
-    glm::mat4 getMM() const;
+    glm::mat4 getMM(); //Not const 'cause modify MM
 
-    void draw();
+    void draw(); //Not const 'cause modify MM
 
 protected:
 
@@ -40,7 +34,7 @@ protected:
     
     bool MMOutOfDate;
 
-    const Texture* texture;
+    const Texture* texture; //only a reference, it has to be deleted at origin
     bool blending;
 
     static const glm::mat4 identity;

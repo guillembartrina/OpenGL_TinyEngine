@@ -1,6 +1,9 @@
 
 #include "IO.hpp"
 
+#include <fstream>
+#include <sstream>
+
 #include "OBJ_Loader.hpp"
 
 IO::IO() {}

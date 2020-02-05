@@ -8,9 +8,9 @@
 
 enum ShaderType
 {
-	Vertex = 0,
-	Geomerty,
-	Fragment,
+	ShaderType_Vertex = 0,
+	ShaderType_Geomerty,
+	ShaderType_Fragment,
 	ShaderType_NUM
 };
 
@@ -41,7 +41,7 @@ private:
 	bool loaded;
 	bool compiled;
 
-	static const std::string defaultShaders[ShaderType::ShaderType_NUM];
+	static const std::string defaultShaders[ShaderType_NUM];
 };
 
 #endif

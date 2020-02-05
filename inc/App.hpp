@@ -9,11 +9,8 @@
 
 #include "Shader.hpp"
 #include "Program.hpp"
-#include "Camera.hpp"
-#include "Model3D.hpp"
-#include "Rectangle.hpp"
 #include "RenderFrame.hpp"
-#include "TestRP.hpp"
+#include "Scene.hpp"
 
 class App
 {
@@ -34,9 +31,10 @@ private:
     double timecount;
 
     RenderFrame* rf;
-    std::vector<Model3D*> drawables;
-    Texture* texture;
-    Rectangle* rect;
+    Scene scene;
+
+    Shader* snvs,* snfs;
+    Program* snp;
 
     void update();
 

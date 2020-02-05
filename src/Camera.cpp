@@ -353,14 +353,14 @@ void Camera::applyResize(unsigned int w, unsigned int h)
 	};
 }
 
-const float* Camera::getVM() const
+const glm::mat4 Camera::getVM() const
 {
-	return &VM[0][0];
+	return VM;
 }
 
-const float* Camera::getPM() const
+const glm::mat4 Camera::getPM() const
 {
-	return &PM[0][0];
+	return PM;
 }
 
 Camera* Camera::getDefaultCamera()

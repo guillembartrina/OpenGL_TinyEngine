@@ -2,6 +2,28 @@
 #ifndef ENUMS_HPP
 #define ENUMS_HPP
 
+#include <utility>
+
+#include "GLM/vec3.hpp"
+
+//--------------------------------
+
+#define PI 3.14159265358979323846
+
+//--------------------------------
+
+typedef std::pair<glm::vec3,glm::vec3> BB;
+
+struct Light
+{
+    glm::vec3 position;
+    glm::vec3 color;
+
+    Light(glm::vec3 position, glm::vec3 color = glm::vec3(1.0, 1.0, 1.0)) : position(position), color(color) {}
+};
+
+//--------------------------------
+
 enum SAL3D
 {
     SAL3D_vertex = 0,

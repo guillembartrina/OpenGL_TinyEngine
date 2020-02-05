@@ -3,6 +3,8 @@
 
 #include "GLM/gtc/matrix_transform.hpp"
 
+#include "Program.hpp"
+
 const glm::mat4 Entity::identity = glm::mat4(1.0);
 
 Entity::Entity()
@@ -14,7 +16,9 @@ Entity::Entity()
     position = glm::vec3(0.0);
     size = glm::vec3(1.0);
     rotX = rotY = rotZ = 0.f;
+
     origin = glm::vec3(0.0);
+    //bb?
 
     MMOutOfDate = false;
     MM = glm::mat4(1.0);
@@ -23,18 +27,21 @@ Entity::Entity()
     blending = false;
 }
 
-Entity::~Entity()
-{
-    if(texture) delete texture;
-}
+Entity::~Entity() {}
 
 void Entity::setMMLocation(GLuint MMLocation)
 {
     this->MMLocation = MMLocation;
 }
 
-glm::mat4 Entity::getMM() const
+glm::mat4 Entity::getMM()
 {
+    if(MMOutOfDate)
+    {
+        computeMM();
+        MMOutOfDate = false;
+    }
+
     return MM;
 }
 
@@ -52,14 +59,14 @@ void Entity::draw()
     else glDisable(GL_BLEND);
     
     glBindVertexArray(VAO);
-    glUniformMatrix4fv(MMLocation, 1, GL_FALSE, &MM[0][0]);
-    glUniform1i(SUL2D_textured, (texture ? GL_TRUE : GL_FALSE));
+    Program::getActiveProgram()->setUniformValue(MMLocation, MM);
+    Program::getActiveProgram()->setUniformValue(SUL2D_textured, (texture ? GL_TRUE : GL_FALSE));
     if(texture) texture->bind();
     specificDraw();
     glBindVertexArray(0);
 }
 
-void Entity::computeMM()
+void Entity::computeMM()  //OBJ -> centerto000 -> scale -> originto000 -> rotates -> origintoposition 
 {
     MM = identity;
     MM = glm::translate(MM, position);

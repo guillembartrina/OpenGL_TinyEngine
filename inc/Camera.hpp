@@ -39,8 +39,8 @@ public:
 
 	void applyResize(unsigned int w, unsigned int h);
 
-	const float *getVM() const;
-	const float *getPM() const;
+	const glm::mat4 getVM() const;
+	const glm::mat4 getPM() const;
 
 	static Camera* getDefaultCamera(); 
 

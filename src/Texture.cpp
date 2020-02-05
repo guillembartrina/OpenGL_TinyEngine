@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-Texture::Texture(unsigned int W, unsigned int H, FBComponent component)
+Texture::Texture(unsigned int W, unsigned int H, TextureComponent component)
 {
     glGenTextures(1, &ID);
     glBindTexture(GL_TEXTURE_2D, ID);
@@ -18,13 +18,13 @@ Texture::Texture(unsigned int W, unsigned int H, FBComponent component)
 
     switch(component)
     {
-        case FBComponent_Color:
+        case TextureComponent_Color:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, W, H, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
             break;
-        case FBComponent_Depth:
+        case TextureComponent_Depth:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, W, H, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
             break;
-        case FBComponent_Stencil:
+        case TextureComponent_Stencil:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_STENCIL, W, H, 0, GL_DEPTH_STENCIL, GL_FLOAT, 0);
             break;
     }
@@ -60,7 +60,7 @@ Texture::Texture(const std::string& filename)
     }
     stbi_image_free(data);
 
-    component = FBComponent_Color;
+    component = TextureComponent_Color;
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -80,7 +80,7 @@ int Texture::getH() const
     return H;
 }
 
-FBComponent Texture::getComponent() const
+TextureComponent Texture::getComponent() const
 {
     return component;
 }

@@ -3,8 +3,6 @@
 #define IO_HPP
 
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <vector>
 
 struct Model3DDefinition
