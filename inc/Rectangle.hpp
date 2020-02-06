@@ -17,9 +17,9 @@ private:
 
     glm::vec4 color;
 
-    static unsigned int snumInstances;
-    static GLuint sVAO;
-    static GLuint siVBO, svVBO, stVBO;
+    static unsigned int rectnumInstances;
+    static GLuint rectVAO;
+    static GLuint rectiVBO, rectvVBO, recttVBO;
 };
 
 #endif

@@ -1,6 +1,8 @@
 
 #include "Entity3D.hpp"
 
+#define PI 3.14159265358979323846
+
 #include "GLM/gtc/matrix_transform.hpp"
 
 Entity3D::Entity3D() {}

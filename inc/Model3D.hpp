@@ -13,8 +13,8 @@ public:
     Model3D(const Model3DDefinition& m3d);
     ~Model3D();
 
-    static Model3D* plane();
-    static Model3D* cube();
+    static Model3D* plane(const std::string& texName);
+    static Model3D* cube(const std::string& texName);
 
 protected:
 

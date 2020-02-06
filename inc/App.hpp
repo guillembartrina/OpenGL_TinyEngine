@@ -4,12 +4,7 @@
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "GLM/glm.hpp"
-#include "GLM/gtc/matrix_transform.hpp"
 
-#include "Shader.hpp"
-#include "Program.hpp"
-#include "RenderFrame.hpp"
 #include "Scene.hpp"
 
 class App
@@ -21,30 +16,16 @@ public:
 
     void run();
 
+    unsigned int getW() const;
+    unsigned int getH() const;
+    GLFWwindow* getWindow();
+
 private:
 
-    //local
-    GLFWwindow* window;
     unsigned int W, H;
+    GLFWwindow* window;
 
-    //logic
     double timecount;
-
-    RenderFrame* rf;
-    Scene scene;
-
-    Shader* snvs,* snfs;
-    Program* snp;
-
-    void update();
-
-    void draw() const;
-
-    void handleEvents();
-    static void callback_key(GLFWwindow *window, int key, int scancode, int action, int mods);
-    static void callback_cursor(GLFWwindow *window, double xpos, double ypos);
-    static void callback_resize(GLFWwindow *window, int width, int height);
-
 };
 
 #endif

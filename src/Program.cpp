@@ -364,6 +364,8 @@ const Program* Program::getDefaultDrawProgram()
         drawProgram->attachShader(*drawVS);
         drawProgram->attachShader(*drawFS);
         drawProgram->link();
+
+        //vks * shine
     }
 
 	return drawProgram;
