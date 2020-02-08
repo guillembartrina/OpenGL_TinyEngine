@@ -1,4 +1,4 @@
-# Blender MTL File: 'Crate1.blend'
+# Blender MTL File: 'crate.blend'
 # Material Count: 1
 
 newmtl Material.001
@@ -9,4 +9,4 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd objs\crate_1.jpg
+map_Kd objs\crate.jpg

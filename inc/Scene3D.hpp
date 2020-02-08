@@ -21,9 +21,12 @@ public:
 
     void pushCamera(Camera* camera);
     void popCamera();
-
     Camera* getCamera();
+
+    void addLight(const glm::vec3& light);
     std::vector<glm::vec3>& getLights();
+
+    void addEntity(Entity3D* entity);
     std::list<Entity3D*>& getEntities();
 
     void draw(RenderFrame& rf, const Program* program = Program::getDefaultDrawProgram()) const;

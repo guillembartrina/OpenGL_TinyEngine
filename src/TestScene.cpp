@@ -13,49 +13,134 @@ TestScene::TestScene(App* app)
 	glfwSetCursorPosCallback(window, callback_cursor);
 	glfwSetWindowSizeCallback(window, callback_resize);
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetCursorPos(window, app->getW()/2, app->getH()/2);
+
     rf = new RenderFrame(glm::ivec2(0, 0), glm::uvec2(app->getW(), app->getH()));
+    shadowMap = new Texture(app->getW(), app->getH(), TextureComponent_Depth);
 
     Camera* cam = new Camera();
     cam->setFocus(glm::vec3(0.0, 10.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, -1.0));
     cam->setOptic_Perspective(PI/2.0, 1.0, 0.1, 40.0);
     scene.pushCamera(cam);
 
-    scene.getLights().push_back(glm::vec3(5.0, 5.0, 0.0));
-    scene.getLights().push_back(glm::vec3(-5.0, 5.0, 0.0));
+    Camera* cam2 = new Camera();
+    cam2->setFocus(glm::vec3(-10.0, 20.0, -10.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 1.0));
+    cam2->setOptic_Perspective(PI/2.0, 1.0, 5.0, 40.0);
+    //cam2->setOptic_Orthogonal(-20, 20, -20, 20, 5, 40);
+    scene.pushCamera(cam2);
 
-    for(int i = -8; i <= 8; i++)
+    scene.addLight(glm::vec3(-10.0, 20.0, -10.0));
+    //scene.getLights().push_back(glm::vec3(-10.0, 10.0, 10.0));
+    //scene.getLights().push_back(glm::vec3(10.0, 10.0, -10.0));
+    //scene.getLights().push_back(glm::vec3(10.0, 10.0, 10.0));
+
+    
+    smvs = new Shader(ShaderType_Vertex);
+    smvs->load_fromFile("shaders/smd.vs");
+    smvs->compile();
+    smfs = new Shader(ShaderType_Fragment);
+    smfs->load_fromFile("shaders/smd.fs");
+    smfs->compile();
+    smp = new Program();
+    smp->attachShader(*smvs);
+    smp->attachShader(*smfs);
+    smp->link();
+
+    std::vector<Model3DDefinition> m3ds;
+    IO::readOBJ("objs/terrain.obj", m3ds);
+
+    Model3D* part = new Model3D(m3ds[0]);
+    part->setPosition(glm::vec3(0.0));
+    scene.addEntity(part);
+
+    for(int i = 1; i < m3ds.size(); i++)
     {
-        Model3D* cube = Model3D::cube("dd");
-        cube->setSize(glm::vec3(1.0));
-        cube->setPosition(glm::vec3(i, 0.0, 0.0));
-        scene.getEntities().insert(scene.getEntities().end(), cube);
+        Model3D* part2 = new Model3D(m3ds[i]);
+        part2->translate(-part->getOriginalPosition());
+        scene.addEntity(part2);
     }
 
-    Model3D* cube = Model3D::cube("dd");
-    cube->setSize(glm::vec3(20, 1, 1));
-    cube->setPosition(glm::vec3(0.0, 2.5, 0.0));
-    scene.getEntities().insert(scene.getEntities().end(), cube);
+    up_pressed = down_pressed = left_pressed = right_pressed = false;
 
-    tp = bp = lp = rp = false;
+    //--------------- SHADOW MAP
+    
+    rf->clean();
+    scene.draw(*rf);
+
+    rf->sampleTexture(shadowMap);
+
+    smp->use();
+    smp->setUniformValue(3, scene.getCamera()->getVM());
+    smp->setUniformValue(4, scene.getCamera()->getPM());
+
+    scene.popCamera();
 }
 
 TestScene::~TestScene()
 {
     delete rf;
+    delete smp;
+    delete smvs;
+    delete smfs;
 }
 
 void TestScene::update()
 {
-    if(tp) scene.getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
-    if(bp) scene.getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
-    if(lp) scene.getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
-    if(rp) scene.getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+    if(up_pressed) scene.getCamera()->move(glm::vec3(0.0, 0.0, -0.1));
+    if(down_pressed) scene.getCamera()->move(glm::vec3(0.0, 0.0, 0.1));
+    if(left_pressed) scene.getCamera()->move(glm::vec3(-0.1, 0.0, 0.0));
+    if(right_pressed) scene.getCamera()->move(glm::vec3(0.1, 0.0, 0.0));
+
+    if(l_pressed)
+    {
+        scene.getLights().back() += glm::vec3(5, 0, 0);
+        Camera* cam2 = new Camera();
+        cam2->setFocus(glm::vec3(scene.getLights().back()), glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 1.0));
+        cam2->setOptic_Perspective(PI/2.0, 1.0, 5.0, 40.0);
+        scene.pushCamera(cam2);
+
+        rf->clean();
+        scene.draw(*rf);
+
+        rf->sampleTexture(shadowMap);
+
+        smp->use();
+        smp->setUniformValue(3, scene.getCamera()->getVM());
+        smp->setUniformValue(4, scene.getCamera()->getPM());
+
+        scene.popCamera();
+
+        l_pressed = false;
+    }
+    else if(k_pressed)
+    {
+        scene.getLights().back() += glm::vec3(-5, 0, 0);
+        Camera* cam2 = new Camera();
+        cam2->setFocus(glm::vec3(scene.getLights().back()), glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 1.0));
+        cam2->setOptic_Perspective(PI/2.0, 1.0, 5.0, 40.0);
+        scene.pushCamera(cam2);
+
+        rf->clean();
+        scene.draw(*rf);
+
+        rf->sampleTexture(shadowMap);
+
+        smp->use();
+        smp->setUniformValue(3, scene.getCamera()->getVM());
+        smp->setUniformValue(4, scene.getCamera()->getPM());
+
+        scene.popCamera();
+        k_pressed = false;
+    }
 }
 
 void TestScene::draw() const
 {
-    rf->clean();
-    scene.draw(*rf);
+    rf->clean();    
+    shadowMap->bind(GL_TEXTURE1);
+    scene.draw(*rf, smp);
+    //scene.draw(*rf);
 }
 
 void TestScene::callback_cursor(GLFWwindow *window, double xpos, double ypos)
@@ -77,18 +162,20 @@ void TestScene::callback_key(GLFWwindow *window, int key, int scancode, int acti
 
     if(action == GLFW_PRESS)
     {
-        if(key == GLFW_KEY_UP) scene->tp = true;
-        else if(key == GLFW_KEY_DOWN) scene->bp = true; 
-        else if(key == GLFW_KEY_LEFT) scene->lp = true; 
-        else if(key == GLFW_KEY_RIGHT) scene->rp = true; 
+        if(key == GLFW_KEY_W) scene->up_pressed = true;
+        else if(key == GLFW_KEY_S) scene->down_pressed = true; 
+        else if(key == GLFW_KEY_A) scene->left_pressed = true; 
+        else if(key == GLFW_KEY_D) scene->right_pressed = true;
+        else if(key == GLFW_KEY_L) scene->l_pressed = true; 
+        else if(key == GLFW_KEY_K) scene->k_pressed = true; 
     }
 
     if(action == GLFW_RELEASE)
     {
-        if(key == GLFW_KEY_UP) scene->tp = false;
-        else if(key == GLFW_KEY_DOWN) scene->bp = false; 
-        else if(key == GLFW_KEY_LEFT) scene->lp = false; 
-        else if(key == GLFW_KEY_RIGHT) scene->rp = false; 
+        if(key == GLFW_KEY_W) scene->up_pressed = false;
+        else if(key == GLFW_KEY_S) scene->down_pressed = false; 
+        else if(key == GLFW_KEY_A) scene->left_pressed = false; 
+        else if(key == GLFW_KEY_D) scene->right_pressed = false; 
     }
 }
 

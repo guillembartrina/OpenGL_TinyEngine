@@ -13,6 +13,8 @@ public:
     Model3D(const Model3DDefinition& m3d);
     ~Model3D();
 
+    glm::vec3 getOriginalPosition() const;
+
     static Model3D* plane(const std::string& texName);
     static Model3D* cube(const std::string& texName);
 

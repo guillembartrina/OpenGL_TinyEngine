@@ -64,6 +64,7 @@ void RenderFrame::drawOnSurface(Entity2D& d) //Change?
 void RenderFrame::sampleTexture(Texture* texture)
 {
     texture->bind();
+    //glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texture->getW(), texture->getH());
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, position.x, position.y, std::min(texture->getW(), int(size.x-position.x)), std::min(texture->getH(), int(size.y-position.y)));
 }
 

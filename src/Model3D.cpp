@@ -50,7 +50,7 @@ Model3D::Model3D(const Model3DDefinition& m3d)
 		glVertexAttribPointer(SAL3D_texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(SAL3D_texCoord);
 
-		texture = new Texture(m3d.texName);
+		if(not m3d.texName.empty()) texture = new Texture(m3d.texName);
 	}
 
 	if(not m3d.kas.empty())
@@ -110,6 +110,11 @@ Model3D::~Model3D()
 	glDeleteVertexArrays(1, &VAO);
 }
 
+glm::vec3 Model3D::getOriginalPosition() const
+{
+	return (bb.first+bb.second)/2.f;
+}
+
 Model3D* Model3D::plane(const std::string& texName)
 {
 	Model3DDefinition m3d;
@@ -133,15 +138,17 @@ Model3D* Model3D::plane(const std::string& texName)
                     0.5,   	0.5,    0.5,
                     0.5,    0.5,    0.5 };
 
-	m3d.kss = { 	0.8,    0.8,    0.8,
-                    0.8,    0.8,	0.8,
-                    0.8,   	0.8,    0.8,
-                    0.8,    0.8,    0.8 };
+	/*
+	m3d.kss = { 	0.5,    0.5,    0.5,
+                    0.5,    0.5,	0.5,
+                    0.5,   	0.5,    0.5,
+                    0.5,    0.5,    0.5 };
 
-	m3d.nss = { 	10.0,
-                    10.0,
-                    10.0,
-                    10.0 };
+	m3d.nss = { 	50.0,
+                    50.0,
+                    50.0,
+                    50.0 };
+	*/
 
     m3d.indices = { 1,  2,  0,
                     1,  3,  2 };
@@ -188,23 +195,25 @@ Model3D* Model3D::cube(const std::string& texName)
                     0.5, 0.5, 0.5, //6
                     0.5, 0.5, 0.5 };
 	
-	m3d.kss = { 	0.8, 0.8, 0.8, //0
-                    0.8, 0.8, 0.8, //1
-                    0.8, 0.8, 0.8, //2
-                    0.8, 0.8, 0.8, //3
-                    0.8, 0.8, 0.8, //4
-                    0.8, 0.8, 0.8, //5
-                    0.8, 0.8, 0.8, //6
-                    0.8, 0.8, 0.8 };
+	/*
+	m3d.kss = { 	0.5, 0.5, 0.5, //0
+                    0.5, 0.5, 0.5, //1
+                    0.5, 0.5, 0.5, //2
+                    0.5, 0.5, 0.5, //3
+                    0.5, 0.5, 0.5, //4
+                    0.5, 0.5, 0.5, //5
+                    0.5, 0.5, 0.5, //6
+                    0.5, 0.5, 0.5 };
 
-	m3d.nss = { 	10.0, //0
-                    10.0, //1
-                    10.0, //2
-                    10.0, //3
-                    10.0, //4
-                    10.0, //5
-                    10.0, //6
-                    10.0 };
+	m3d.nss = { 	50.0, //0
+                    50.0, //1
+                    50.0, //2
+                    50.0, //3
+                    50.0, //4
+                    50.0, //5
+                    50.0, //6
+                    50.0 };
+	*/
 
     m3d.indices = { 0,  6,  4,
                     0,  2,  6,

@@ -21,9 +21,6 @@ App::App(const char* name, unsigned int W, unsigned int H)
 		throw std::runtime_error("Failed to create window");
 	}
 
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    //glfwSetCursorPos(window, W/2, H/2);
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

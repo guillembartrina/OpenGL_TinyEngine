@@ -314,7 +314,7 @@ const Program* Program::getDefaultDrawProgram()
         "layout(binding = 0)uniform sampler2D tex;"\
         "vec3 Ambient()"\
         "{"\
-        "return (vka);"\
+        "return max(vka, vkd*0.1f);"\
         "}"\
         "vec3 Diffuse(vec3 light)"\
         "{"\
