@@ -5,21 +5,7 @@
 #include <string>
 #include <vector>
 
-struct Model3DDefinition
-{
-    Model3DDefinition() {}
-    ~Model3DDefinition() {}
-    
-    std::vector<unsigned int> indices;
-    std::vector<float> vertices;
-    std::vector<float> normals;
-    std::vector<float> texCoords;
-    std::string texName;
-    std::vector<float> kas;
-    std::vector<float> kds;
-    std::vector<float> kss;
-    std::vector<float> nss;
-};
+#include "Enums.hpp"
 
 class IO 
 {

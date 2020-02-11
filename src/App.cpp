@@ -30,7 +30,7 @@ App::App(const char* name, unsigned int W, unsigned int H)
     glewInit();
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
     Scene::setActiveScene(new TestScene(this));
 }

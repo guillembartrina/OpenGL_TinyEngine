@@ -110,11 +110,6 @@ Model3D::~Model3D()
 	glDeleteVertexArrays(1, &VAO);
 }
 
-glm::vec3 Model3D::getOriginalPosition() const
-{
-	return (bb.first+bb.second)/2.f;
-}
-
 Model3D* Model3D::plane(const std::string& texName)
 {
 	Model3DDefinition m3d;
@@ -241,48 +236,4 @@ void Model3D::specificDraw() const
 	{
 		glDrawArrays(GL_TRIANGLES, 0, elements);
 	}
-}
-
-BB Model3D::computeBB(const Model3DDefinition& m3d)
-{
-	const std::vector<unsigned int>& I = m3d.indices;
-	const std::vector<float>& V = m3d.vertices;
-
-	glm::vec3 min, max;
-
-	if(not I.empty())
-	{
-		min.x = max.x = V[I[0]+0];
-		min.y = max.y = V[I[0]+1];
-		min.z = max.z = V[I[0]+2];
-
-		for(unsigned int i = 1; i < I.size(); i++)
-		{
-			glm::vec3 val = glm::vec3(V[3*I[i]+0], V[3*I[i]+1], V[3*I[i]+2]);
-			if (val.x < min.x) min.x = val.x;
-			if (val.x > max.x) max.x = val.x;
-			if (val.y < min.y) min.y = val.y;
-			if (val.y > max.y) max.y = val.y;
-			if (val.z < min.z) min.z = val.z;
-			if (val.z > max.z) max.z = val.z;
-		}
-	}
-	else
-	{
-		min.x = max.x = V[0+0];
-		min.y = max.y = V[0+1];
-		min.z = max.z = V[0+2];
-
-		for(unsigned int i = 3; i < V.size(); i+=3)
-		{
-			glm::vec3 val = glm::vec3(V[i+0], V[i+1], V[i+2]);
-			if (val.x < min.x) min.x = val.x;
-			if (val.x > max.x) max.x = val.x;
-			if (val.y < min.y) min.y = val.y;
-			if (val.y > max.y) max.y = val.y;
-			if (val.z < min.z) min.z = val.z;
-			if (val.z > max.z) max.z = val.z;
-		}
-	}
-	return std::make_pair(min, max);
 }

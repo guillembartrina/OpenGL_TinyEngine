@@ -354,7 +354,7 @@ const Program* Program::getDefaultDrawProgram()
         "vec3 light = (VM * vec4(lights[i], 1.0)).xyz;"\
         "color += (Diffuse(light) + Specular(light));"\
         "}"\
-        "if(textured) fragColor = texture(tex, vtexCoord) * vec4(color, 1.0);"
+        "if(textured) fragColor = texture(tex, vtexCoord) * vec4(color, 1.0);"\
         "else fragColor = vec4(color, 1.0);"\
         "}";
         drawFS = new Shader(ShaderType_Fragment);
@@ -364,8 +364,6 @@ const Program* Program::getDefaultDrawProgram()
         drawProgram->attachShader(*drawVS);
         drawProgram->attachShader(*drawFS);
         drawProgram->link();
-
-        //vks * shine
     }
 
 	return drawProgram;

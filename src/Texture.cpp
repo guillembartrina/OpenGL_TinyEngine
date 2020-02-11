@@ -45,6 +45,8 @@ Texture::Texture(const std::string& filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     int nrc;
+
+    stbi_set_flip_vertically_on_load(true);
     
     unsigned char* data = stbi_load(filename.c_str(), &W, &H, &nrc, 4);
 

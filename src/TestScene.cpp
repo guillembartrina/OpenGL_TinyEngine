@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Model3D.hpp"
+#include "Model3DM.hpp"
 
 TestScene::TestScene(App* app)
 {
@@ -30,22 +31,25 @@ TestScene::TestScene(App* app)
     //cam2->setOptic_Orthogonal(-20, 20, -20, 20, 5, 40);
     scene.pushCamera(cam2);
 
-    scene.addLight(glm::vec3(-10.0, 20.0, -10.0));
+    scene.addLight(glm::vec3(0.0, 20.0, 0.0));
+    //scene.addLight(glm::vec3(-10.0, 20.0, -10.0));
     //scene.getLights().push_back(glm::vec3(-10.0, 10.0, 10.0));
     //scene.getLights().push_back(glm::vec3(10.0, 10.0, -10.0));
     //scene.getLights().push_back(glm::vec3(10.0, 10.0, 10.0));
 
     
     smvs = new Shader(ShaderType_Vertex);
-    smvs->load_fromFile("shaders/smd.vs");
+    smvs->load_fromFile("shaders/checker.vs");
     smvs->compile();
     smfs = new Shader(ShaderType_Fragment);
-    smfs->load_fromFile("shaders/smd.fs");
+    smfs->load_fromFile("shaders/checker.fs");
     smfs->compile();
     smp = new Program();
     smp->attachShader(*smvs);
     smp->attachShader(*smfs);
     smp->link();
+
+    /*
 
     std::vector<Model3DDefinition> m3ds;
     IO::readOBJ("objs/terrain.obj", m3ds);
@@ -61,12 +65,22 @@ TestScene::TestScene(App* app)
         scene.addEntity(part2);
     }
 
+    */
+
+    std::vector<Model3DDefinition> m3ds2;
+    IO::readOBJ("objs/castle/castle.obj", m3ds2);
+
+    Model3DM* part2 = new Model3DM(m3ds2);
+    part2->setPosition(glm::vec3(0.0));
+    scene.addEntity(part2);
+
     up_pressed = down_pressed = left_pressed = right_pressed = false;
 
     //--------------- SHADOW MAP
     
-    rf->clean();
-    scene.draw(*rf);
+
+    //rf->clean();
+    //scene.draw(*rf);
 
     rf->sampleTexture(shadowMap);
 
@@ -138,9 +152,9 @@ void TestScene::update()
 void TestScene::draw() const
 {
     rf->clean();    
-    shadowMap->bind(GL_TEXTURE1);
-    scene.draw(*rf, smp);
-    //scene.draw(*rf);
+    //shadowMap->bind(GL_TEXTURE1);
+    //scene.draw(*rf, smp);
+    scene.draw(*rf);
 }
 
 void TestScene::callback_cursor(GLFWwindow *window, double xpos, double ypos)
